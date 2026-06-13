@@ -1,6 +1,7 @@
 <?php
 
 use Mandrael\ContaoMaplibreBundle\ContentElement\ContentMaplibreMap;
+use Mandrael\ContaoMaplibreBundle\Widget\IconPickerWidget;
 
 // Backend-Modul: Inhalte -> MapLibre Standorte
 $GLOBALS['BE_MOD']['content']['maplibre_locations'] = [
@@ -10,3 +11,6 @@ $GLOBALS['BE_MOD']['content']['maplibre_locations'] = [
 
 // Inhaltselement "MapLibre Karte" (Legacy-CTE, lauffaehig auf Contao 4.13/5.3/5.7)
 $GLOBALS['TL_CTE']['media']['maplibre_map'] = ContentMaplibreMap::class;
+
+// Visueller Icon-Picker (Backend-Formularfeld)
+$GLOBALS['BE_FFL']['maplibreIconPicker'] = IconPickerWidget::class;

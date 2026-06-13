@@ -97,13 +97,38 @@
     }
   }
 
+  // Farbiger Tropfen-Pin (Markenfarbe) mit weißem Icon-Glyph (per CSS-Maske) – wie Google My Maps.
+  // Die Pin-Spitze sitzt bei viewBox-Punkt (15,40) unten-mittig, daher anchor 'bottom'.
+  function buildPinElement(color, iconUrl) {
+    var wrap = document.createElement('div');
+    wrap.className = 'maplibre-pin';
+    wrap.style.setProperty('--pin-color', color);
+    wrap.innerHTML = '<svg class="maplibre-pin__shape" viewBox="0 0 30 40" aria-hidden="true">'
+      + '<path d="M15 0.5C7.3 0.5 1 6.8 1 14.5C1 24.5 15 39.5 15 39.5C15 39.5 29 24.5 29 14.5C29 6.8 22.7 0.5 15 0.5Z"/>'
+      + '</svg><span class="maplibre-pin__icon"></span>';
+    var glyph = wrap.querySelector('.maplibre-pin__icon');
+    glyph.style.webkitMaskImage = 'url("' + iconUrl + '")';
+    glyph.style.maskImage = 'url("' + iconUrl + '")';
+    return wrap;
+  }
+
   function addPins(map, cfg) {
     cfg.markers.forEach(function (m) {
-      var marker = new maplibregl.Marker({ color: m.color || cfg.markerColor })
-        .setLngLat([m.lng, m.lat]);
+      var marker;
+      var popupOffset;
+
+      if (m.icon) {
+        marker = new maplibregl.Marker({ element: buildPinElement(m.color || cfg.markerColor, m.icon), anchor: 'bottom' });
+        popupOffset = [0, -42];
+      } else {
+        marker = new maplibregl.Marker({ color: m.color || cfg.markerColor });
+        popupOffset = 24;
+      }
+
+      marker.setLngLat([m.lng, m.lat]);
 
       if (m.title || m.address || m.link) {
-        marker.setPopup(new maplibregl.Popup({ offset: 24 }).setDOMContent(buildPopup(m)));
+        marker.setPopup(new maplibregl.Popup({ offset: popupOffset }).setDOMContent(buildPopup(m)));
       }
 
       marker.addTo(map);

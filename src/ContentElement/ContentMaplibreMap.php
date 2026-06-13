@@ -6,10 +6,12 @@ namespace Mandrael\ContaoMaplibreBundle\ContentElement;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
 use Mandrael\ContaoMaplibreBundle\Csp\MaplibreCspSourceRegistrar;
 use Mandrael\ContaoMaplibreBundle\Helper\LocationsHelper;
+use Mandrael\ContaoMaplibreBundle\Map\IconCatalog;
 use Mandrael\ContaoMaplibreBundle\Map\MaplibreRenderer;
 use Mandrael\ContaoMaplibreBundle\Map\Marker;
 
@@ -50,6 +52,10 @@ class ContentMaplibreMap extends ContentElement
         /** @var MaplibreRenderer $renderer */
         $renderer = $container->get(MaplibreRenderer::class);
 
+        $request = $container->get('request_stack')->getCurrentRequest();
+        $basePath = null !== $request ? rtrim($request->getBasePath(), '/') : '';
+        $defaultIcon = $this->resolveBundledIcon((string) $this->maplibre_default_icon, $basePath);
+
         $markers = [];
 
         // 1. Zentrale Standorte: Auswahl + Kategorien, nur veröffentlichte mit Koordinaten.
@@ -57,16 +63,20 @@ class ContentMaplibreMap extends ContentElement
         $categories = StringUtil::deserialize($this->maplibre_categories, true);
 
         foreach ($locations->findPublished($ids, $categories) as $row) {
+            $icon = $this->resolveLocationIcon($row, $basePath) ?: $defaultIcon;
+
             $markers[] = new Marker(
                 (float) $row['latitude'],
                 (float) $row['longitude'],
                 (string) $row['title'],
                 $this->composeAddress($row),
                 (string) ($row['link'] ?? ''),
+                null,
+                '' !== $icon ? $icon : null,
             );
         }
 
-        // 2. Ad-hoc-Marker aus dem beim Speichern befüllten Cache.
+        // 2. Ad-hoc-Marker aus dem beim Speichern befüllten Cache (nutzen das Gruppen-Default-Icon).
         foreach (StringUtil::deserialize($this->maplibre_inline_cache, true) as $entry) {
             if (isset($entry['lat'], $entry['lng'])) {
                 $markers[] = new Marker(
@@ -74,6 +84,9 @@ class ContentMaplibreMap extends ContentElement
                     (float) $entry['lng'],
                     (string) ($entry['title'] ?? ''),
                     (string) ($entry['address'] ?? ''),
+                    '',
+                    null,
+                    '' !== $defaultIcon ? $defaultIcon : null,
                 );
             }
         }
@@ -128,5 +141,30 @@ class ContentMaplibreMap extends ContentElement
         }
 
         return str_starts_with($color, '#') ? $color : '#'.$color;
+    }
+
+    /**
+     * Icon eines Standorts: eigenes SVG (Datei-UUID) hat Vorrang vor dem gewählten Preset-Icon.
+     *
+     * @param array<string, mixed> $row
+     */
+    private function resolveLocationIcon(array $row, string $basePath): string
+    {
+        $uuid = $row['iconSvg'] ?? null;
+
+        if (!empty($uuid)) {
+            $file = FilesModel::findByUuid($uuid);
+
+            if (null !== $file && $file->path) {
+                return $basePath.'/'.$file->path;
+            }
+        }
+
+        return $this->resolveBundledIcon((string) ($row['icon'] ?? ''), $basePath);
+    }
+
+    private function resolveBundledIcon(string $key, string $basePath): string
+    {
+        return IconCatalog::has($key) ? $basePath.'/'.IconCatalog::relativeUrl($key) : '';
     }
 }

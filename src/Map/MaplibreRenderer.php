@@ -98,7 +98,12 @@ final class MaplibreRenderer
         $this->registerAssets();
 
         $template = new FrontendTemplate(self::TEMPLATE);
-        $template->setData($this->templateData($markers, $options));
+        // Defaults für die vom Inhaltselement sonst gesetzten Wrapper-Variablen, damit der
+        // programmatische Aufruf aus fremden Bundles keine undefinierten Template-Variablen trifft.
+        $template->setData(array_merge(
+            ['headline' => '', 'hl' => 'h2', 'class' => '', 'cssID' => ''],
+            $this->templateData($markers, $options)
+        ));
 
         return $template->parse();
     }

@@ -10,8 +10,10 @@ services:
             - '../src/ContaoManager/'
             - '../src/DependencyInjection/'
             - '../src/ContentElement/'
+            - '../src/Widget/'
             - '../src/Csp/'
             - '../src/Map/Marker.php'
+            - '../src/Map/IconCatalog.php'
 
     # Vom Inhaltselement (per "new" erzeugt) ueber System::getContainer()->get(...) gezogen.
     Mandrael\ContaoMaplibreBundle\Map\MaplibreRenderer:

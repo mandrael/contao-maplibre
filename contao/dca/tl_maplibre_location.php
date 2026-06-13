@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
     ],
 
     'palettes' => [
-        'default' => '{location_legend},title,category;{address_legend},street,postal,city,country,maplibre_regeocode;{coords_legend},latitude,longitude;{link_legend},link;{publish_legend},published,start,stop',
+        'default' => '{location_legend},title,category;{address_legend},street,postal,city,country,maplibre_regeocode;{coords_legend},latitude,longitude;{marker_legend},icon,iconSvg;{link_legend},link;{publish_legend},published,start,stop',
     ],
 
     'fields' => [
@@ -137,6 +137,18 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
             'inputType' => 'text',
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''",
+        ],
+        'icon' => [
+            'exclude'   => true,
+            'inputType' => 'maplibreIconPicker',
+            'eval'      => ['tl_class' => 'clr'],
+            'sql'       => "varchar(64) NOT NULL default ''",
+        ],
+        'iconSvg' => [
+            'exclude'   => true,
+            'inputType' => 'fileTree',
+            'eval'      => ['filesOnly' => true, 'fieldType' => 'radio', 'extensions' => 'svg', 'tl_class' => 'clr'],
+            'sql'       => 'binary(16) NULL',
         ],
         'link' => [
             'exclude'   => true,

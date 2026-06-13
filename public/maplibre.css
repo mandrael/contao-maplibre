@@ -16,6 +16,42 @@
   cursor: pointer;
 }
 
+/* Farbiger Pin mit weißem Icon-Glyph (Marker mit Icon) */
+.maplibre-pin {
+  position: relative;
+  width: 30px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.maplibre-pin__shape {
+  display: block;
+  width: 30px;
+  height: 40px;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.4));
+}
+
+.maplibre-pin__shape path {
+  fill: var(--pin-color, #4a6b3a);
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.maplibre-pin__icon {
+  position: absolute;
+  left: 8px;
+  top: 7px;
+  width: 14px;
+  height: 14px;
+  background-color: #ffffff;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
 .maplibre-popup__title {
   display: block;
   margin-bottom: 2px;

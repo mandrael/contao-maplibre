@@ -22,6 +22,9 @@ A single code base for the three Contao LTS versions **4.13, 5.3 and 5.7** (incl
   **all** maps. No manual removal of individual markers.
 - **Geocoding on save:** coordinates are looked up from the address via Nominatim (OpenStreetMap) and
   cached in the database – manual coordinates remain possible.
+- **Marker symbols:** a curated, map-relevant icon set ([Maki](https://labs.mapbox.com/maki-icons/),
+  CC0) – chosen in the back end via a visual picker (coloured pin with a white icon, like Google My Maps).
+  Group default on the map element, overridable per location; plus a **custom SVG** upload.
 - **Multi-markers & clustering:** any number of markers per map; optionally as summarising, numbered
   cluster circles that zoom into the region on click.
 - **Familiar look:** OpenFreeMap style `bright` (alternatively `liberty`/`positron`), subtle marker
@@ -68,8 +71,20 @@ Add a content element of type **MapLibre map** and choose the marker source:
 - **Custom markers (ad hoc)** – one line per marker in the format `Label; Address`. Coordinates are
   looked up automatically and cached when the element is saved.
 
-Display options: map style, height, marker colour, **cluster** on/off, “interactive immediately”.
-Viewport: “fit all markers automatically” (`fitBounds`) **or** a fixed centre + zoom level.
+Display options: map style, height, marker colour, **default symbol (group)**, **cluster** on/off,
+“interactive immediately”. Viewport: “fit all markers automatically” (`fitBounds`) **or** a fixed
+centre + zoom level.
+
+### Marker symbols
+
+Each marker is shown as a coloured pin (marker colour) with a white icon glyph – like Google My Maps.
+The symbol is resolved in this order: **location’s custom SVG** › **location’s chosen symbol** ›
+**group default symbol of the map element** › plain pin without a symbol.
+
+- In the back end (both location **and** map element) a **visual icon picker** opens a clickable grid
+  of the bundled symbols.
+- For an individual symbol, use the **“Custom SVG symbol”** field on the location (an SVG file from the
+  file manager). Matching the pin style, it is rendered white inside the coloured pin.
 
 ### 3. Import an existing Google My Maps map
 
@@ -125,6 +140,11 @@ $html = $renderer->render(
 The required attribution “MapLibre | OpenFreeMap © OpenMapTiles Data from OpenStreetMap” is shown
 automatically on the map by the OpenFreeMap style.
 
+## Bundled icons
+
+The symbol set under `public/icons/` is taken from [Maki](https://github.com/mapbox/maki) by Mapbox and
+is licensed under **CC0 1.0** (public domain). No attribution required.
+
 ## License
 
-MIT – see [LICENSE](LICENSE).
+MIT – see [LICENSE](LICENSE). Bundled Maki icons: CC0 1.0.

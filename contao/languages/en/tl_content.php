@@ -12,6 +12,7 @@ $GLOBALS['TL_LANG']['tl_content']['maplibre_inline']       = ['Custom markers (a
 $GLOBALS['TL_LANG']['tl_content']['maplibre_style']        = ['Map style', 'OpenFreeMap style.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_height']       = ['Height (pixels)', 'Height of the map in pixels.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_marker_color'] = ['Marker colour', 'Hex colour of the markers (default 4a6b3a).'];
+$GLOBALS['TL_LANG']['tl_content']['maplibre_default_icon']  = ['Default symbol (group)', 'Symbol for all markers of this map. Individual locations can override it.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_cluster']      = ['Cluster markers', 'For many markers, show summarising numbered circles; a click zooms into the region.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_interactive']  = ['Interactive immediately', 'Make the map operable without a prior click (no "click to activate").'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_fit_bounds']   = ['Fit all markers automatically', 'Choose zoom and viewport automatically so that all markers are visible (overrides centre/zoom).'];

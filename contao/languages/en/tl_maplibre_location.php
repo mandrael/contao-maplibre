@@ -4,6 +4,7 @@
 $GLOBALS['TL_LANG']['tl_maplibre_location']['location_legend'] = 'Location';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['address_legend']  = 'Address';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['coords_legend']   = 'Coordinates';
+$GLOBALS['TL_LANG']['tl_maplibre_location']['marker_legend']   = 'Marker symbol';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['link_legend']     = 'Link';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['publish_legend']  = 'Publication';
 
@@ -17,6 +18,8 @@ $GLOBALS['TL_LANG']['tl_maplibre_location']['country']            = ['Country', 
 $GLOBALS['TL_LANG']['tl_maplibre_location']['maplibre_regeocode'] = ['Recalculate coordinates from address', 'Recalculate the coordinates from the address on save (overwrites manually set values).'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['latitude']           = ['Latitude', 'Determined from the address, can be overridden manually.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['longitude']          = ['Longitude', 'Determined from the address, can be overridden manually.'];
+$GLOBALS['TL_LANG']['tl_maplibre_location']['icon']               = ['Marker symbol', 'Symbol for this location (empty = default pin). Overrides the group default symbol of the map element.'];
+$GLOBALS['TL_LANG']['tl_maplibre_location']['iconSvg']            = ['Custom SVG symbol', 'Optional: a custom SVG file as the marker symbol. Takes precedence over the selected symbol.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['link']               = ['Link (URL)', 'Optional link in the popup, e.g. to a detail page.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['published']          = ['Publish location', 'Only published locations appear on the maps.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['start']              = ['Show from', 'Show the location only from this time on.'];

@@ -10,7 +10,7 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = [InlineMarke
 $GLOBALS['TL_DCA']['tl_content']['palettes']['maplibre_map'] =
     '{type_legend},type,headline;'
     .'{maplibre_source_legend},maplibre_locations,maplibre_categories,maplibre_inline;'
-    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_cluster,maplibre_interactive;'
+    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_default_icon,maplibre_cluster,maplibre_interactive;'
     .'{maplibre_focus_legend},maplibre_fit_bounds,maplibre_zoom,maplibre_center_lat,maplibre_center_lng;'
     .'{template_legend:hide},customTpl;'
     .'{protected_legend:hide},protected;'
@@ -67,6 +67,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_marker_color'] = [
     'inputType' => 'text',
     'eval'      => ['maxlength' => 6, 'colorpicker' => true, 'isHexColor' => true, 'decodeEntities' => true, 'tl_class' => 'w50 wizard'],
     'sql'       => "varchar(6) NOT NULL default '4a6b3a'",
+];
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_default_icon'] = [
+    'exclude'   => true,
+    'inputType' => 'maplibreIconPicker',
+    'eval'      => ['tl_class' => 'clr'],
+    'sql'       => "varchar(64) NOT NULL default ''",
 ];
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_cluster'] = [

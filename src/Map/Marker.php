@@ -17,6 +17,7 @@ final class Marker
         public readonly string $address = '',
         public readonly string $link = '',
         public readonly ?string $color = null,
+        public readonly ?string $icon = null,
     ) {
     }
 
@@ -41,6 +42,10 @@ final class Marker
 
         if (null !== $this->color && '' !== $this->color) {
             $data['color'] = $this->color;
+        }
+
+        if (null !== $this->icon && '' !== $this->icon) {
+            $data['icon'] = $this->icon;
         }
 
         return $data;

@@ -4,6 +4,7 @@
 $GLOBALS['TL_LANG']['tl_maplibre_location']['location_legend'] = 'Standort';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['address_legend']  = 'Adresse';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['coords_legend']   = 'Koordinaten';
+$GLOBALS['TL_LANG']['tl_maplibre_location']['marker_legend']   = 'Marker-Symbol';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['link_legend']     = 'Verknüpfung';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['publish_legend']  = 'Veröffentlichung';
 
@@ -17,6 +18,8 @@ $GLOBALS['TL_LANG']['tl_maplibre_location']['country']            = ['Land', 'Op
 $GLOBALS['TL_LANG']['tl_maplibre_location']['maplibre_regeocode'] = ['Koordinaten neu aus Adresse ermitteln', 'Beim Speichern die Koordinaten anhand der Adresse neu berechnen (überschreibt manuell gesetzte Werte).'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['latitude']           = ['Breitengrad', 'Wird aus der Adresse ermittelt, kann manuell überschrieben werden.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['longitude']          = ['Längengrad', 'Wird aus der Adresse ermittelt, kann manuell überschrieben werden.'];
+$GLOBALS['TL_LANG']['tl_maplibre_location']['icon']               = ['Marker-Symbol', 'Symbol für diesen Standort (leer = Standard-Pin). Überschreibt das Gruppen-Standardsymbol des Karten-Elements.'];
+$GLOBALS['TL_LANG']['tl_maplibre_location']['iconSvg']            = ['Eigenes SVG-Symbol', 'Optional: eine eigene SVG-Datei als Marker-Symbol. Hat Vorrang vor dem ausgewählten Symbol.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['link']               = ['Verknüpfung (URL)', 'Optionaler Link im Popup, z. B. zur Detailseite.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['published']          = ['Standort veröffentlichen', 'Nur veröffentlichte Standorte erscheinen auf den Karten.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['start']              = ['Anzeigen ab', 'Standort erst ab diesem Zeitpunkt anzeigen.'];

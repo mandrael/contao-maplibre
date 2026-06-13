@@ -23,6 +23,9 @@ Eine gemeinsame Codebasis für die drei Contao-LTS-Versionen **4.13, 5.3 und 5.7
   von **allen** Karten. Kein manuelles Entfernen einzelner Marker.
 - **Geocoding beim Speichern:** Aus der Adresse werden per Nominatim (OpenStreetMap) die Koordinaten
   ermittelt und in der Datenbank gecacht – manuelle Koordinaten bleiben möglich.
+- **Marker-Symbole:** Kuratiertes, kartenrelevantes Icon-Set ([Maki](https://labs.mapbox.com/maki-icons/),
+  CC0) – im Backend über einen visuellen Picker wählbar (farbiger Pin mit weißem Icon, wie Google My Maps).
+  Gruppen-Standard im Karten-Element, pro Standort überschreibbar; zusätzlich **eigenes SVG** hochladbar.
 - **Multi-Marker & Cluster:** Beliebig viele Marker pro Karte; optional als zusammenfassende,
   nummerierte Cluster-Kreise, die beim Klick in die Region zoomen.
 - **Optik wie gewohnt:** OpenFreeMap-Stil `bright` (alternativ `liberty`/`positron`), dezente
@@ -71,8 +74,20 @@ Im Artikel ein Inhaltselement vom Typ **MapLibre Karte** hinzufügen und die Mar
 - **Eigene Marker (Ad-hoc)** – eine Zeile je Marker im Format `Bezeichnung; Adresse`. Die Koordinaten
   werden beim Speichern des Elements automatisch ermittelt und gecacht.
 
-Darstellungs-Optionen: Kartenstil, Höhe, Markerfarbe, **Cluster** an/aus, „sofort interaktiv".
-Ausschnitt: „alle Marker automatisch einpassen" (`fitBounds`) **oder** fester Mittelpunkt + Zoomstufe.
+Darstellungs-Optionen: Kartenstil, Höhe, Markerfarbe, **Standard-Symbol (Gruppe)**, **Cluster** an/aus,
+„sofort interaktiv". Ausschnitt: „alle Marker automatisch einpassen" (`fitBounds`) **oder** fester
+Mittelpunkt + Zoomstufe.
+
+### Marker-Symbole
+
+Jeder Marker wird als farbiger Pin (Markerfarbe) mit weißem Icon-Glyph dargestellt – wie bei Google
+My Maps. Das Symbol wird in dieser Reihenfolge bestimmt: **eigenes SVG des Standorts** › **gewähltes
+Symbol des Standorts** › **Gruppen-Standardsymbol des Karten-Elements** › schlichter Pin ohne Symbol.
+
+- Im Backend (Standort **und** Karten-Element) öffnet ein **visueller Icon-Picker** ein anklickbares
+  Raster der mitgelieferten Symbole.
+- Für ein individuelles Symbol genügt das Feld **„Eigenes SVG-Symbol"** am Standort (eine SVG-Datei aus
+  der Dateiverwaltung). Es wird – passend zum Pin-Stil – weiß im farbigen Pin dargestellt.
 
 ### 3. Bestehende Google-My-Maps-Karte importieren
 
@@ -128,6 +143,11 @@ $html = $renderer->render(
 Die geforderte Quellenangabe „MapLibre | OpenFreeMap © OpenMapTiles Data from OpenStreetMap" wird vom
 OpenFreeMap-Stil automatisch in der Karte angezeigt.
 
+## Mitgelieferte Icons
+
+Das Symbol-Set unter `public/icons/` stammt aus [Maki](https://github.com/mapbox/maki) von Mapbox und
+steht unter **CC0 1.0** (Public Domain). Eine Attribution ist nicht erforderlich.
+
 ## Lizenz
 
-MIT – siehe [LICENSE](LICENSE).
+MIT – siehe [LICENSE](LICENSE). Mitgelieferte Maki-Icons: CC0 1.0.

@@ -36,6 +36,16 @@ class MarkerTest extends TestCase
         );
     }
 
+    public function testToArrayIncludesIconWhenSet(): void
+    {
+        $marker = new Marker(47.81, 13.04, 'Praxis', '', '', null, 'bundles/mandraelcontaomaplibre/icons/doctor.svg');
+
+        $array = $marker->toArray();
+
+        $this->assertSame('bundles/mandraelcontaomaplibre/icons/doctor.svg', $array['icon']);
+        $this->assertArrayNotHasKey('color', $array);
+    }
+
     public function testIsValidRejectsNullIsland(): void
     {
         $this->assertFalse((new Marker(0.0, 0.0))->isValid());
