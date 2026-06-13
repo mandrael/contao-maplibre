@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class GeocodingService
 {
     private const ENDPOINT = 'https://nominatim.openstreetmap.org/search';
-    private const USER_AGENT = 'contao-maplibre/0.1 (+https://github.com/mandrael/contao-maplibre)';
+    private const USER_AGENT = 'contao-maplibre/0.2 (+https://github.com/mandrael/contao-maplibre)';
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,

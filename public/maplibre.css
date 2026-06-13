@@ -52,6 +52,23 @@
   mask-size: contain;
 }
 
+/* Cluster-Marker (nummerierter Kreis) */
+.maplibre-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--cluster-color, #4a6b3a);
+  color: #ffffff;
+  font: 700 13px/1 system-ui, -apple-system, sans-serif;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
 .maplibre-popup__title {
   display: block;
   margin-bottom: 2px;

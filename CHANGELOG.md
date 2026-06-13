@@ -4,6 +4,18 @@ Alle nennenswerten Änderungen an diesem Projekt werden hier dokumentiert.
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0] – noch nicht veröffentlicht
+
+### Hinzugefügt
+- **Marker-Symbole:** kuratiertes Maki-Icon-Set (CC0, `public/icons/`) mit visuellem Backend-Picker;
+  Gruppen-Standard im Karten-Element, pro Standort überschreibbar; zusätzlich eigenes SVG hochladbar.
+  Darstellung als farbiger Pin mit weißem Icon-Glyph (wie Google My Maps).
+
+### Geändert
+- **Cluster-Modus** rendert jetzt über HTML-Marker: Einzelpunkte zeigen dieselben (Icon-)Pins wie der
+  Pin-Modus, Cluster als nummerierte Kreise (Klick zoomt in die Region). Entfernt die Abhängigkeit von
+  Style-Glyph-Fonts für die Cluster-Beschriftung.
+
 ## [0.1.0] – noch nicht veröffentlicht
 
 ### Hinzugefügt
@@ -15,9 +27,6 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   (Bezeichnung; Adresse). Optionen für Stil, Höhe, Markerfarbe, Cluster, „sofort interaktiv",
   automatisches Einpassen (`fitBounds`) sowie fester Mittelpunkt/Zoom.
 - **Multi-Marker** und **Cluster-Marker** (nummerierte Kreise, Klick zoomt in die Region).
-- **Marker-Symbole:** kuratiertes Maki-Icon-Set (CC0) mit visuellem Backend-Picker; Gruppen-Standard im
-  Karten-Element, pro Standort überschreibbar; zusätzlich eigenes SVG hochladbar. Darstellung als
-  farbiger Pin mit weißem Icon-Glyph (wie Google My Maps).
 - Optik nach Vorbild von OpenFreeMap (`bright`/`liberty`/`positron`), Marker-Standardfarbe `#4a6b3a`,
   „Zum Aktivieren klicken".
 - Konsolen-Befehl `contao:maplibre:import-mymaps` zum Import bestehender „Google My Maps"-Karten (KML).

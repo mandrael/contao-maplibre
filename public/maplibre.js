@@ -135,16 +135,35 @@
     });
   }
 
+  // Nummerierter Kreis-Marker für einen Cluster.
+  function buildClusterElement(count, color) {
+    var el = document.createElement('div');
+    el.className = 'maplibre-cluster';
+    el.style.setProperty('--cluster-color', color);
+    el.textContent = String(count);
+    return el;
+  }
+
+  // Cluster über HTML-Marker statt Circle-Layer: Einzelpunkte erhalten dieselben Icon-Pins wie im
+  // Pin-Modus (konsistente Optik), Cluster werden als nummerierte Kreise dargestellt. Die GeoJSON-
+  // Source übernimmt das Clustering; 'render' + querySourceFeatures synchronisieren die HTML-Marker.
   function addClustered(map, cfg) {
-    var features = cfg.markers.map(function (m) {
+    var color = cfg.markerColor;
+
+    var features = cfg.markers.map(function (m, i) {
       return {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
-        properties: { title: m.title || '', address: m.address || '', link: m.link || '' }
+        properties: {
+          pid: i,
+          title: m.title || '',
+          address: m.address || '',
+          link: m.link || '',
+          icon: m.icon || '',
+          color: m.color || ''
+        }
       };
     });
-
-    var color = cfg.markerColor;
 
     map.addSource('maplibre-markers', {
       type: 'geojson',
@@ -154,68 +173,80 @@
       clusterMaxZoom: 16
     });
 
+    // Unsichtbarer Layer, damit die Source getilet und per querySourceFeatures abfragbar ist.
     map.addLayer({
-      id: 'clusters',
+      id: 'maplibre-cluster-src',
       type: 'circle',
       source: 'maplibre-markers',
-      filter: ['has', 'point_count'],
-      paint: {
-        'circle-color': color,
-        'circle-opacity': 0.9,
-        'circle-radius': ['step', ['get', 'point_count'], 16, 10, 22, 30, 30],
-        'circle-stroke-width': 3,
-        'circle-stroke-color': '#ffffff'
+      paint: { 'circle-radius': 0, 'circle-color': 'rgba(0,0,0,0)' }
+    });
+
+    var markers = {};
+    var onScreen = {};
+
+    function makePointMarker(coords, p) {
+      var m = { lng: coords[0], lat: coords[1], title: p.title, address: p.address, link: p.link, icon: p.icon, color: p.color };
+      var marker;
+
+      if (m.icon) {
+        marker = new maplibregl.Marker({ element: buildPinElement(m.color || color, m.icon), anchor: 'bottom' });
+      } else {
+        marker = new maplibregl.Marker({ color: m.color || color });
       }
-    });
 
-    map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'maplibre-markers',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': ['get', 'point_count_abbreviated'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 13
-      },
-      paint: { 'text-color': '#ffffff' }
-    });
+      marker.setLngLat(coords);
 
-    map.addLayer({
-      id: 'unclustered',
-      type: 'circle',
-      source: 'maplibre-markers',
-      filter: ['!', ['has', 'point_count']],
-      paint: {
-        'circle-color': color,
-        'circle-radius': 8,
-        'circle-stroke-width': 3,
-        'circle-stroke-color': '#ffffff'
+      if (m.title || m.address || m.link) {
+        marker.setPopup(new maplibregl.Popup({ offset: m.icon ? [0, -42] : 24 }).setDOMContent(buildPopup(m)));
       }
-    });
 
-    map.on('click', 'clusters', function (e) {
-      var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-      var clusterId = features[0].properties.cluster_id;
-      var source = map.getSource('maplibre-markers');
+      return marker;
+    }
 
-      source.getClusterExpansionZoom(clusterId).then(function (zoom) {
-        map.easeTo({ center: features[0].geometry.coordinates, zoom: zoom });
+    function makeClusterMarker(coords, p) {
+      var el = buildClusterElement(p.point_count_abbreviated || p.point_count, color);
+      var clusterId = p.cluster_id;
+
+      el.addEventListener('click', function () {
+        map.getSource('maplibre-markers').getClusterExpansionZoom(clusterId).then(function (zoom) {
+          map.easeTo({ center: coords, zoom: zoom });
+        });
       });
-    });
 
-    map.on('click', 'unclustered', function (e) {
-      var feature = e.features[0];
-      new maplibregl.Popup({ offset: 12 })
-        .setLngLat(feature.geometry.coordinates.slice())
-        .setDOMContent(buildPopup(feature.properties))
-        .addTo(map);
-    });
+      return new maplibregl.Marker({ element: el }).setLngLat(coords);
+    }
 
-    ['clusters', 'unclustered'].forEach(function (layer) {
-      map.on('mouseenter', layer, function () { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', layer, function () { map.getCanvas().style.cursor = ''; });
+    function updateMarkers() {
+      var fresh = {};
+      var feats = map.querySourceFeatures('maplibre-markers');
+
+      for (var i = 0; i < feats.length; i++) {
+        var coords = feats[i].geometry.coordinates;
+        var p = feats[i].properties;
+        var key = p.cluster ? ('c' + p.cluster_id) : ('p' + p.pid);
+
+        if (fresh[key]) { continue; }
+
+        if (!markers[key]) {
+          markers[key] = p.cluster ? makeClusterMarker(coords, p) : makePointMarker(coords, p);
+        }
+
+        fresh[key] = markers[key];
+
+        if (!onScreen[key]) { markers[key].addTo(map); }
+      }
+
+      for (var k in onScreen) {
+        if (!fresh[k]) { onScreen[k].remove(); }
+      }
+
+      onScreen = fresh;
+    }
+
+    map.on('render', function () {
+      if (map.isSourceLoaded('maplibre-markers')) { updateMarkers(); }
     });
+    map.on('moveend', updateMarkers);
   }
 
   function initMap(el) {
