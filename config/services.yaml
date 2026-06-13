@@ -1,0 +1,47 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Mandrael\ContaoMaplibreBundle\:
+        resource: '../src/*'
+        exclude:
+            - '../src/MandraelContaoMaplibreBundle.php'
+            - '../src/ContaoManager/'
+            - '../src/DependencyInjection/'
+            - '../src/ContentElement/'
+            - '../src/Csp/'
+            - '../src/Map/Marker.php'
+
+    # Vom Inhaltselement (per "new" erzeugt) ueber System::getContainer()->get(...) gezogen.
+    Mandrael\ContaoMaplibreBundle\Map\MaplibreRenderer:
+        public: true
+
+    # DCA-Callbacks loest Contao ueber den Container auf -> public.
+    Mandrael\ContaoMaplibreBundle\Helper\LocationsHelper:
+        public: true
+
+    Mandrael\ContaoMaplibreBundle\EventListener\LocationLabelListener:
+        public: true
+
+    Mandrael\ContaoMaplibreBundle\EventListener\LocationGeocodeListener:
+        public: true
+        arguments:
+            $geocoder: '@Mandrael\ContaoMaplibreBundle\Service\GeocodingService'
+            $connection: '@database_connection'
+
+    Mandrael\ContaoMaplibreBundle\EventListener\InlineMarkerGeocodeListener:
+        public: true
+        arguments:
+            $geocoder: '@Mandrael\ContaoMaplibreBundle\Service\GeocodingService'
+
+    Mandrael\ContaoMaplibreBundle\Service\GeocodingService:
+        arguments:
+            $httpClient: '@http_client'
+            $logger: '@?monolog.logger.contao'
+
+    Mandrael\ContaoMaplibreBundle\Service\GoogleMyMapsImporter:
+        public: true
+        arguments:
+            $httpClient: '@http_client'
+            $connection: '@database_connection'

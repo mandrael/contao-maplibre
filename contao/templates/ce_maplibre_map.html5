@@ -1,0 +1,13 @@
+<?php if ($this->mapHasMarkers): ?>
+
+<div class="ce_maplibre_map block<?= $this->class ?>"<?= $this->cssID ?>>
+
+  <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
+  <div class="maplibre-map" id="<?= $this->mapId ?>" style="height:<?= $this->mapHeight ?>px;" data-maplibre="<?= \Contao\StringUtil::specialchars($this->mapConfig) ?>"></div>
+
+</div>
+
+<?php endif; ?>

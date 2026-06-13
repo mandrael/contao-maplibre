@@ -1,0 +1,33 @@
+.ce_maplibre_map .maplibre-map {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #e8ece6;
+}
+
+/* Klick-zum-Aktivieren: solange nicht aktiv, faengt eine transparente Ebene den ersten Klick ab,
+   damit die Seite normal durch die Karte scrollt. */
+.maplibre-map:not(.maplibre-map--active)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.maplibre-popup__title {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.maplibre-popup__address {
+  color: #555;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.maplibre-popup__link {
+  display: inline-block;
+  margin-top: 6px;
+}

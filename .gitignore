@@ -1,0 +1,8 @@
+/vendor/
+/.claude/
+composer.lock
+.DS_Store
+.phpunit.result.cache
+.phpunit.cache/
+.php-cs-fixer.cache
+status.md

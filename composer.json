@@ -1,0 +1,53 @@
+{
+    "name": "mandrael/contao-maplibre",
+    "type": "contao-bundle",
+    "description": "MapLibre-Karten für Contao mit OpenFreeMap (© OpenMapTiles, Data from OpenStreetMap): Multi-Marker und Cluster-Marker, zentrale Standortverwaltung mit Geocoding (Nominatim) und ein Inhaltselement – datenschutzfreundlicher Ersatz für Google Maps.",
+    "keywords": ["contao", "maplibre", "openfreemap", "openmaptiles", "openstreetmap", "osm", "map", "maps", "marker", "multi-marker", "cluster", "geocoding", "nominatim", "locations"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Gasperl",
+            "email": "michael@gasperl.at"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/mandrael/contao-maplibre/issues",
+        "source": "https://github.com/mandrael/contao-maplibre"
+    },
+    "require": {
+        "php": "^8.1",
+        "contao/core-bundle": "^4.13 || ^5.3",
+        "doctrine/dbal": "^3.6 || ^4.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "symfony/config": "^5.4 || ^6.4 || ^7.0",
+        "symfony/console": "^5.4 || ^6.4 || ^7.0",
+        "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.0",
+        "symfony/http-client": "^5.4 || ^6.4 || ^7.0",
+        "symfony/http-kernel": "^5.4 || ^6.4 || ^7.0"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "contao/test-case": "^5.0",
+        "phpunit/phpunit": "^11.5 || ^12.4",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mandrael\\ContaoMaplibreBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mandrael\\ContaoMaplibreBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao/manager-plugin": true,
+            "contao-components/installer": true
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Mandrael\\ContaoMaplibreBundle\\ContaoManager\\Plugin"
+    }
+}
