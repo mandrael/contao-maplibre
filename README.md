@@ -78,6 +78,10 @@ Darstellungs-Optionen: Kartenstil, Höhe, Markerfarbe, **Standard-Symbol (Gruppe
 „sofort interaktiv". Ausschnitt: „alle Marker automatisch einpassen" (`fitBounds`) **oder** fester
 Mittelpunkt + Zoomstufe.
 
+Standardmäßig scrollt die Seite **durch die Karte hindurch** (Mausrad-Zoom erst nach einem Klick in die
+Karte – wie auf der Vorlage). Die Option **„Karte sofort interaktiv"** lässt die Karte das Mausrad-Scrollen
+ohne Klick übernehmen (und fängt damit das Seiten-Scrollen ab).
+
 ### Marker-Symbole
 
 Jeder Marker wird als farbiger Pin (Markerfarbe) mit weißem Icon-Glyph dargestellt – wie bei Google

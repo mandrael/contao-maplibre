@@ -15,6 +15,8 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **Cluster-Modus** rendert jetzt über HTML-Marker: Einzelpunkte zeigen dieselben (Icon-)Pins wie der
   Pin-Modus, Cluster als nummerierte Kreise (Klick zoomt in die Region). Entfernt die Abhängigkeit von
   Style-Glyph-Fonts für die Cluster-Beschriftung.
+- Beschriftung der Option **„Karte sofort interaktiv"** klargestellt: Im Standard (deaktiviert) scrollt
+  die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ## [0.1.0] – noch nicht veröffentlicht
 

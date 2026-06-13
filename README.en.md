@@ -75,6 +75,10 @@ Display options: map style, height, marker colour, **default symbol (group)**, *
 “interactive immediately”. Viewport: “fit all markers automatically” (`fitBounds`) **or** a fixed
 centre + zoom level.
 
+By default the page **scrolls through the map** (wheel zoom only after a click on the map – like the
+reference). The **“Map interactive immediately”** option lets the map take over wheel scrolling without a
+click (capturing page scroll).
+
 ### Marker symbols
 
 Each marker is shown as a coloured pin (marker colour) with a white icon glyph – like Google My Maps.
