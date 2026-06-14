@@ -1,8 +1,8 @@
-# Contao MapLibre
-
-<img src="logo.svg" alt="Contao MapLibre" width="88" align="right">
+<img src="logo.svg" alt="Contao MapLibre" width="100" align="right">
 
 **Deutsch** | [English](README.en.md)
+
+# Contao MapLibre
 
 Datenschutzfreundliche Karten für Contao mit [MapLibre GL JS](https://maplibre.org/) und
 [OpenFreeMap](https://openfreemap.org/) (Vektor-Tiles auf Basis von OpenMapTiles / OpenStreetMap) –
