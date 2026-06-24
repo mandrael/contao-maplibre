@@ -81,11 +81,11 @@ class IconPickerWidget extends Widget
         return '<style>'
             .'.maplibre-iconpicker{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}'
             .'.maplibre-iconpicker .mlip-opt{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;'
-            .'width:72px;padding:8px 4px;border:1px solid #c4c6c9;border-radius:6px;background:#fff;cursor:pointer;font-size:10px;color:#555}'
-            .'.maplibre-iconpicker .mlip-opt:hover{border-color:#4a6b3a}'
-            .'.maplibre-iconpicker .mlip-opt.selected{border-color:#4a6b3a;box-shadow:0 0 0 1px #4a6b3a;background:#f0f4ed}'
+            .'width:72px;padding:8px 4px;border:1px solid var(--form-border);border-radius:6px;background:var(--form-bg);cursor:pointer;font-size:10px;color:var(--text)}'
+            .'.maplibre-iconpicker .mlip-opt:hover{border-color:var(--green)}'
+            .'.maplibre-iconpicker .mlip-opt.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}'
             .'.maplibre-iconpicker .mlip-opt img{width:22px;height:22px;margin-bottom:5px}'
-            .'.maplibre-iconpicker .mlip-none{font-size:22px;line-height:22px;height:22px;margin-bottom:5px;color:#888}'
+            .'.maplibre-iconpicker .mlip-none{font-size:22px;line-height:22px;height:22px;margin-bottom:5px;color:var(--gray)}'
             .'.maplibre-iconpicker .mlip-label{text-align:center;line-height:1.2;word-break:break-word}'
             .'</style>';
     }

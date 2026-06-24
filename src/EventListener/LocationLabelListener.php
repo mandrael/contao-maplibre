@@ -21,13 +21,13 @@ final class LocationLabelListener
     {
         $title = StringUtil::specialchars((string) ($row['title'] ?? ''));
         $city = trim((string) ($row['city'] ?? ''));
-        $suffix = '' !== $city ? ' <span style="color:#999">– '.StringUtil::specialchars($city).'</span>' : '';
+        $suffix = '' !== $city ? ' <span class="tl_gray">– '.StringUtil::specialchars($city).'</span>' : '';
 
         $hasCoords = '' !== (string) ($row['latitude'] ?? '') && '' !== (string) ($row['longitude'] ?? '');
 
         $dot = $hasCoords
-            ? '<span title="Koordinaten vorhanden" style="color:#4a6b3a">&#9679;</span>'
-            : '<span title="Keine Koordinaten" style="color:#cc3333">&#9679;</span>';
+            ? '<span title="Koordinaten vorhanden" class="tl_green">&#9679;</span>'
+            : '<span title="Keine Koordinaten" class="tl_red">&#9679;</span>';
 
         return $dot.' '.$title.$suffix;
     }

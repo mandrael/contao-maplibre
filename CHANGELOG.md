@@ -18,6 +18,12 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - Beschriftung der Option **„Karte sofort interaktiv"** klargestellt: Im Standard (deaktiviert) scrollt
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
+### Behoben
+- **Backend-Dark-Mode:** Status-Punkte und Ort-Suffix der Standort-Liste sowie der
+  Icon-Picker nutzen Contao-CSS-Klassen/-Variablen (`tl_gray`/`tl_green`/`tl_red`,
+  `--form-bg`/`--form-border`/`--text`/`--gray`/`--green`) statt fester Farben und
+  schalten im Contao-5-Dark-Mode korrekt mit.
+
 ## [0.1.0] – noch nicht veröffentlicht
 
 ### Hinzugefügt
