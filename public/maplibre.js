@@ -340,6 +340,14 @@
     var els = document.querySelectorAll('.maplibre-map[data-maplibre]');
     if (!els.length) { return; }
 
+    // Höhe per CSSOM statt Inline-style-Attribut im Template: eine CSP ohne 'unsafe-inline' in
+    // style-src verwirft das Attribut (Karte 0px hoch). Vor dem Nachladen von MapLibre, damit
+    // das Layout nicht springt.
+    els.forEach(function (el) {
+      var height = parseInt(el.dataset.height, 10);
+      if (height > 0) { el.style.height = height + 'px'; }
+    });
+
     var version = DEFAULT_VERSION;
     var first = parseConfig(els[0]);
     if (first && first.maplibreVersion) { version = first.maplibreVersion; }

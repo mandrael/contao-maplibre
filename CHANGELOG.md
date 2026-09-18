@@ -19,6 +19,8 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ### Behoben
+- **Kartenhöhe bei aktiver CSP:** wird jetzt per Skript (CSSOM) statt als Inline-`style`-Attribut
+  gesetzt, damit die Karte sichtbar bleibt, wenn `style-src` kein `'unsafe-inline'` erlaubt.
 - **Backend-Dark-Mode:** Status-Punkte und Ort-Suffix der Standort-Liste sowie der
   Icon-Picker nutzen Contao-CSS-Klassen/-Variablen (`tl_gray`/`tl_green`/`tl_red`,
   `--form-bg`/`--form-border`/`--text`/`--gray`/`--green`) statt fester Farben und
