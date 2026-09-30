@@ -57,4 +57,61 @@ class GoogleMyMapsImporterTest extends TestCase
     {
         $this->assertSame([], GoogleMyMapsImporter::parseKml('kein xml'));
     }
+
+    public function testParseKmlSkipsLineStringButKeepsPoint(): void
+    {
+        $kml = <<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <Placemark>
+                  <name>Route</name>
+                  <LineString><coordinates>13.0,47.8,0 13.1,47.9,0</coordinates></LineString>
+                </Placemark>
+                <Placemark>
+                  <name>Praxis Tobar</name>
+                  <Point><coordinates>13.0488745,47.812698,0</coordinates></Point>
+                </Placemark>
+              </Document>
+            </kml>
+            XML;
+
+        $result = GoogleMyMapsImporter::parseKml($kml);
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Praxis Tobar', $result[0]['name']);
+    }
+
+    public function testParseKmlSkipsNonNumericCoordinates(): void
+    {
+        $kml = <<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <Placemark>
+                  <name>Kaputt</name>
+                  <Point><coordinates>nicht,eine,zahl</coordinates></Point>
+                </Placemark>
+              </Document>
+            </kml>
+            XML;
+
+        $this->assertSame([], GoogleMyMapsImporter::parseKml($kml));
+    }
+
+    public function testParseKmlSkipsNullIslandAndOutOfRange(): void
+    {
+        $kml = <<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <Placemark><name>Null</name><Point><coordinates>0,0,0</coordinates></Point></Placemark>
+                <Placemark><name>Zu weit</name><Point><coordinates>200,95,0</coordinates></Point></Placemark>
+                <Placemark><name>Gut</name><Point><coordinates>13.04,47.81,0</coordinates></Point></Placemark>
+              </Document>
+            </kml>
+            XML;
+
+        $this->assertSame(['Gut'], array_column(GoogleMyMapsImporter::parseKml($kml), 'name'));
+    }
 }

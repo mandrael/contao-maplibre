@@ -25,9 +25,13 @@ final class LocationLabelListener
 
         $hasCoords = '' !== (string) ($row['latitude'] ?? '') && '' !== (string) ($row['longitude'] ?? '');
 
+        $tooltip = StringUtil::specialchars($hasCoords
+            ? ($GLOBALS['TL_LANG']['tl_maplibre_location']['coordsAvailable'] ?? 'Koordinaten vorhanden')
+            : ($GLOBALS['TL_LANG']['tl_maplibre_location']['coordsMissing'] ?? 'Keine Koordinaten'));
+
         $dot = $hasCoords
-            ? '<span title="Koordinaten vorhanden" class="tl_green">&#9679;</span>'
-            : '<span title="Keine Koordinaten" class="tl_red">&#9679;</span>';
+            ? '<span title="'.$tooltip.'" class="tl_green">&#9679;</span>'
+            : '<span title="'.$tooltip.'" class="tl_red">&#9679;</span>';
 
         return $dot.' '.$title.$suffix;
     }

@@ -4,5 +4,9 @@ parameters:
         - src
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        # Contao-Magie: ContentElement/Model/DataContainer greifen Felder ueber __get/__set ab.
+        # Contao-Magie: ContentElement/Model/DataContainer greifen Felder über __get/__set ab.
         - '#Access to an undefined property#'
+        # Die CSP-API gibt es erst ab Contao 5; die Extension lädt den Registrar auf 4.13 gar nicht.
+        -
+            identifier: class.notFound
+            path: src/Csp/*

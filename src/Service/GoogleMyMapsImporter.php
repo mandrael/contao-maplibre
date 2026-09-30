@@ -9,8 +9,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Importiert die Marker einer "Google My Maps"-Karte (öffentliches KML) als zentrale Standorte.
- * Praktisch für die Migration bestehender Google-Karten (z. B. die NK-Kursorte-Karte). Koordinaten
- * stehen bereits im KML; nur wo sie fehlen und eine Adresse vorhanden ist, wird optional geocodiert.
+ * Praktisch für die Migration bestehender Google-Karten (z. B. die NK-Kursorte-Karte). Es werden nur
+ * Punkte (Point/coordinates) übernommen; Linien und Flächen werden übersprungen. Es findet kein
+ * Geocoding statt – Placemarks ohne gültige Punktkoordinaten werden verworfen.
  */
 final class GoogleMyMapsImporter
 {
@@ -82,7 +83,8 @@ final class GoogleMyMapsImporter
         // local-name() ignoriert den KML-Namespace; Placemarks können in Folders verschachtelt sein.
         foreach ($xml->xpath('//*[local-name()="Placemark"]') ?: [] as $placemark) {
             $nameNodes = $placemark->xpath('*[local-name()="name"]');
-            $coordNodes = $placemark->xpath('.//*[local-name()="coordinates"]');
+            // Nur Punkte, keine LineString-/Polygon-Koordinaten (Linien/Flächen werden übersprungen).
+            $coordNodes = $placemark->xpath('.//*[local-name()="Point"]/*[local-name()="coordinates"]');
 
             if (empty($coordNodes)) {
                 continue;
@@ -91,12 +93,16 @@ final class GoogleMyMapsImporter
             $name = $nameNodes ? trim((string) $nameNodes[0]) : '';
             $parts = explode(',', trim((string) $coordNodes[0]));
 
-            if ('' === $name || \count($parts) < 2) {
+            if ('' === $name || \count($parts) < 2 || !is_numeric($parts[0]) || !is_numeric($parts[1])) {
                 continue;
             }
 
             $lng = (float) $parts[0];
             $lat = (float) $parts[1];
+
+            if (!is_finite($lat) || !is_finite($lng) || $lat < -90.0 || $lat > 90.0 || $lng < -180.0 || $lng > 180.0) {
+                continue;
+            }
 
             if (0.0 === $lat && 0.0 === $lng) {
                 continue;

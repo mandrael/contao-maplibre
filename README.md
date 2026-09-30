@@ -38,9 +38,10 @@ Eine gemeinsame Codebasis für die drei Contao-LTS-Versionen **4.13, 5.3 und 5.7
 
 ## Datenschutz
 
-Es werden **keine** Google-Dienste eingebunden. Die Tiles kommen von OpenFreeMap, MapLibre GL JS von
-unpkg. Es findet kein Tracking statt. Geocoding läuft ausschließlich **im Backend beim Speichern**
-(nicht im Frontend), die Koordinaten werden gecacht.
+Die Kartendarstellung im Frontend bindet **keine** Google-Dienste ein. Die Tiles kommen von OpenFreeMap,
+MapLibre GL JS von unpkg. Es findet kein Tracking statt. Geocoding läuft ausschließlich **im Backend
+beim Speichern** (nicht im Frontend), die Koordinaten werden gecacht. Einzige Ausnahme: Der optionale
+KML-Import bestehender „Google My Maps"-Karten ruft dafür einmalig `www.google.com` ab.
 
 ## Installation
 

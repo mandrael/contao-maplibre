@@ -126,6 +126,11 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
             'eval'      => ['tl_class' => 'w50 m12'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
+        // Fingerabdruck der zuletzt geocodierten Adresse (kein Feld in der Palette): erkennt eine
+        // geänderte Adresse, ohne manuell gesetzte Koordinaten bei leerem Fingerabdruck anzutasten.
+        'maplibre_geocoded_address' => [
+            'sql' => "varchar(32) NOT NULL default ''",
+        ],
         'latitude' => [
             'exclude'   => true,
             'inputType' => 'text',

@@ -63,6 +63,11 @@ class ContentMaplibreMap extends ContentElement
         $categories = StringUtil::deserialize($this->maplibre_categories, true);
 
         foreach ($locations->findPublished($ids, $categories) as $row) {
+            // Nicht-numerische Werte (z. B. defekter Altbestand) niemals auf 0 casten – Standort überspringen.
+            if (!is_numeric($row['latitude'] ?? null) || !is_numeric($row['longitude'] ?? null)) {
+                continue;
+            }
+
             $icon = $this->resolveLocationIcon($row, $basePath) ?: $defaultIcon;
 
             $markers[] = new Marker(
@@ -78,7 +83,7 @@ class ContentMaplibreMap extends ContentElement
 
         // 2. Ad-hoc-Marker aus dem beim Speichern befüllten Cache (nutzen das Gruppen-Default-Icon).
         foreach (StringUtil::deserialize($this->maplibre_inline_cache, true) as $entry) {
-            if (isset($entry['lat'], $entry['lng'])) {
+            if (isset($entry['lat'], $entry['lng']) && is_numeric($entry['lat']) && is_numeric($entry['lng'])) {
                 $markers[] = new Marker(
                     (float) $entry['lat'],
                     (float) $entry['lng'],
@@ -136,7 +141,8 @@ class ContentMaplibreMap extends ContentElement
     {
         $color = trim($color);
 
-        if ('' === $color) {
+        // Nur gültiger 3- oder 6-stelliger Hex-Code (mit oder ohne "#"), sonst Standardfarbe.
+        if (1 !== preg_match('/^#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?$/', $color)) {
             return MaplibreRenderer::DEFAULT_MARKER_COLOR;
         }
 
@@ -155,7 +161,8 @@ class ContentMaplibreMap extends ContentElement
         if (!empty($uuid)) {
             $file = FilesModel::findByUuid($uuid);
 
-            if (null !== $file && $file->path) {
+            // Nur echte SVG-Dateien verwenden (Ordner/andere Dateitypen fallen auf das Preset-Icon zurück).
+            if (null !== $file && $file->path && 'file' === $file->type && str_ends_with(strtolower($file->path), '.svg')) {
                 return $basePath.'/'.$file->path;
             }
         }

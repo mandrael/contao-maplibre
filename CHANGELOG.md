@@ -25,6 +25,28 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   Icon-Picker nutzen Contao-CSS-Klassen/-Variablen (`tl_gray`/`tl_green`/`tl_red`,
   `--form-bg`/`--form-border`/`--text`/`--gray`/`--green`) statt fester Farben und
   schalten im Contao-5-Dark-Mode korrekt mit.
+- **Marker-Links (Sicherheit):** `Marker` bereinigt jeden Link zentral; erlaubt sind leer,
+  `http(s)`/`mailto`/`tel` sowie relative URLs ohne Schema. Alles andere (z. B. `javascript:`,
+  `data:`, `vbscript:`, protokoll-relative `//`-Links, Backslashes und Steuerzeichen) wird verworfen. `maplibre.js` prüft
+  `link.href` beim Popup-Aufbau zusätzlich als zweite Schicht für fremde JSON-Quellen.
+- **Nominatim-Antwort:** `GeocodingService` akzeptiert `lat`/`lon` nur noch, wenn beide numerisch,
+  endlich und im gültigen Wertebereich liegen (nicht 0/0); sonst `null` statt fehlerhafter Koordinaten.
+- **Nominatim-Drosselung zentralisiert:** `GeocodingService::geocode()` hält jetzt selbst (prozess-
+  übergreifend über eine Sperrdatei in `var/` der Installation) den Mindestabstand von 1 Anfrage/Sekunde ein; der bisherige
+  `usleep` im Ad-hoc-Marker-Listener entfällt.
+- **Adressänderung bei Standorten:** Ein neuer Fingerabdruck (`maplibre_geocoded_address`) erkennt,
+  ob sich die Adresse seit dem letzten Geocoding geändert hat, und stößt dann automatisch ein neues
+  Geocoding an. Manuell gesetzte Koordinaten ohne Fingerabdruck (Altbestand, KML-Import) bleiben
+  unangetastet.
+- **Koordinaten-Grenzen:** ungültige, nicht-numerische oder außerhalb des gültigen Bereichs liegende
+  Werte (Standorte, Ad-hoc-Marker-Cache, KML-Import) führen jetzt zum Überspringen des Markers statt
+  zu stillschweigend `0`.
+- **KML-Import:** übernimmt nur noch Punktkoordinaten (`Point/coordinates`); Linien und Flächen
+  innerhalb eines Placemarks werden übersprungen statt fehlerhaft interpretiert.
+- **JavaScript-Robustheit:** Icon-URL in der CSS-Maske wird kodiert/maskiert (kein Ausbruch aus
+  `url("…")`), ein abgebrochener `getClusterExpansionZoom`-Aufruf wird abgefangen, Zoomstufe `0`
+  wird nicht mehr fälschlich durch den Fallback ersetzt, und mehrere Marker ohne `fitBounds`/festen
+  Mittelpunkt zentrieren jetzt auf die Mitte der Marker statt auf `[0, 0]`.
 
 ## [0.1.0] – noch nicht veröffentlicht
 

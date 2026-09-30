@@ -41,6 +41,7 @@ services:
         arguments:
             $httpClient: '@http_client'
             $logger: '@?monolog.logger.contao'
+            $lockFile: '%kernel.project_dir%/var/contao-maplibre-nominatim.lock'
 
     Mandrael\ContaoMaplibreBundle\Service\GoogleMyMapsImporter:
         public: true

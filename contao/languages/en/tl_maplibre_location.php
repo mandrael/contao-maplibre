@@ -36,3 +36,7 @@ $GLOBALS['TL_LANG']['tl_maplibre_location']['show']   = ['Details', 'Show locati
 // Messages
 $GLOBALS['TL_LANG']['tl_maplibre_location']['geocodeError'] = 'Geocoding failed. Please enter the coordinates manually.';
 $GLOBALS['TL_LANG']['tl_maplibre_location']['geocodeOk']    = 'Coordinates determined: %s, %s';
+
+// Tooltips of the status dots in the list
+$GLOBALS['TL_LANG']['tl_maplibre_location']['coordsAvailable'] = 'Coordinates available';
+$GLOBALS['TL_LANG']['tl_maplibre_location']['coordsMissing']   = 'No coordinates';

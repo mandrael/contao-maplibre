@@ -11,8 +11,10 @@ use Mandrael\ContaoMaplibreBundle\Service\GeocodingService;
 
 /**
  * onsubmit_callback für tl_maplibre_location: ermittelt beim Speichern aus der Adresse die
- * Koordinaten (Nominatim) und cacht sie in der DB. Geocodiert nur, wenn Koordinaten fehlen oder
- * "neu ermitteln" angehakt ist – manuell gesetzte Koordinaten bleiben sonst unangetastet.
+ * Koordinaten (Nominatim) und cacht sie in der DB. Geocodiert, wenn Koordinaten fehlen, "neu
+ * ermitteln" angehakt ist, oder sich die Adresse gegenüber dem zuletzt geocodierten Fingerabdruck
+ * (maplibre_geocoded_address) geändert hat. Ein leerer Fingerabdruck (Altbestand, KML-Import, manuell
+ * eingetragene Koordinaten) löst dagegen kein Geocoding aus – die Koordinaten bleiben unangetastet.
  */
 final class LocationGeocodeListener
 {
@@ -44,8 +46,11 @@ final class LocationGeocodeListener
 
         $hasCoords = '' !== (string) ($row['latitude'] ?? '') && '' !== (string) ($row['longitude'] ?? '');
         $regeocode = '1' === (string) ($row['maplibre_regeocode'] ?? '');
+        $storedFingerprint = (string) ($row['maplibre_geocoded_address'] ?? '');
+        // md5, weil Straße + PLZ + Ort + Land zusammen bis zu 480 Zeichen lang sein können.
+        $currentFingerprint = md5(self::normalizeAddress($address));
 
-        if ($hasCoords && !$regeocode) {
+        if (!self::shouldGeocode($hasCoords, $regeocode, $storedFingerprint, $currentFingerprint)) {
             return;
         }
 
@@ -58,6 +63,7 @@ final class LocationGeocodeListener
                 $this->connection->update('tl_maplibre_location', ['maplibre_regeocode' => ''], ['id' => $id]);
             }
 
+            // Fingerabdruck bewusst NICHT aktualisieren: der nächste Speichervorgang versucht es erneut.
             return;
         }
 
@@ -65,6 +71,7 @@ final class LocationGeocodeListener
             'latitude' => (string) $coords['lat'],
             'longitude' => (string) $coords['lng'],
             'maplibre_regeocode' => '',
+            'maplibre_geocoded_address' => $currentFingerprint,
         ], ['id' => $id]);
 
         Message::addConfirmation(sprintf(
@@ -72,6 +79,23 @@ final class LocationGeocodeListener
             $coords['lat'],
             $coords['lng']
         ));
+    }
+
+    /**
+     * Reine Entscheidungsregel (ohne DB-Zugriff), damit sie ohne Contao-Umgebung testbar ist.
+     */
+    public static function shouldGeocode(bool $hasCoords, bool $regeocode, string $storedFingerprint, string $currentFingerprint): bool
+    {
+        if (!$hasCoords || $regeocode) {
+            return true;
+        }
+
+        return '' !== $storedFingerprint && $storedFingerprint !== $currentFingerprint;
+    }
+
+    public static function normalizeAddress(string $address): string
+    {
+        return trim((string) preg_replace('/[\s\x{00A0}]+/u', ' ', mb_strtolower($address)));
     }
 
     /**

@@ -36,8 +36,10 @@ A single code base for the three Contao LTS versions **4.13, 5.3 and 5.7** (incl
 
 ## Privacy
 
-**No** Google services are loaded. Tiles come from OpenFreeMap, MapLibre GL JS from unpkg. No tracking.
-Geocoding runs exclusively **in the back end on save** (not in the front end); coordinates are cached.
+The front-end map display loads **no** Google services. Tiles come from OpenFreeMap, MapLibre GL JS
+from unpkg. No tracking. Geocoding runs exclusively **in the back end on save** (not in the front end);
+coordinates are cached. One exception: the optional KML import of existing "Google My Maps" maps makes
+a single request to `www.google.com` for that purpose.
 
 ## Installation
 

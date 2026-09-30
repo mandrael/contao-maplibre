@@ -28,7 +28,7 @@
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "contao/test-case": "^5.0",
-        "phpunit/phpunit": "^11.5 || ^12.4",
+        "phpunit/phpunit": "^10.5 || ^11.5 || ^12.4",
         "phpstan/phpstan": "^2.0"
     },
     "autoload": {

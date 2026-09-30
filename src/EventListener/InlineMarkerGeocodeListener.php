@@ -47,7 +47,6 @@ final class InlineMarkerGeocodeListener
 
         $result = [];
         $failed = [];
-        $didGeocode = false;
 
         foreach ($lines as $line) {
             $line = trim($line);
@@ -70,13 +69,8 @@ final class InlineMarkerGeocodeListener
                 continue;
             }
 
-            // Nominatim-Policy: max. 1 Anfrage/Sekunde. Zwischen echten Geocodes kurz warten.
-            if ($didGeocode) {
-                usleep(1_100_000);
-            }
-
+            // Nominatim-Policy (max. 1 Anfrage/Sekunde): drosselt zentral in GeocodingService.
             $coords = $this->geocoder->geocode($address);
-            $didGeocode = true;
 
             if (null === $coords) {
                 $failed[] = $address;

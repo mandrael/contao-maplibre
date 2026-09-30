@@ -51,6 +51,19 @@
     }
   }
 
+  // Zweite Schicht gegen javascript:/data:/vbscript:-Links: Marker::sanitizeLink (PHP) bereinigt bereits
+  // die eigenen Standorte/Ad-hoc-Marker, aber die Karte akzeptiert (per API) auch fremde JSON-Quellen.
+  function isSafeLink(link) {
+    link = String(link).trim();
+    // Browser lesen "\" wie "/" und streichen Steuerzeichen, beides führt sonst auf fremde Domains.
+    if (/[\\\u0000-\u001F\u007F]/.test(link)) { return false; }
+    if (link.indexOf('//') === 0) { return false; }
+    if (/^(https?:|mailto:|tel:|\/(?!\/)|#|\?)/i.test(link)) { return true; }
+
+    var idx = link.search(/[\/?#:]/);
+    return idx === -1 || link.charAt(idx) !== ':';
+  }
+
   function buildPopup(m) {
     var wrap = document.createElement('div');
     wrap.className = 'maplibre-popup';
@@ -69,7 +82,7 @@
       wrap.appendChild(address);
     }
 
-    if (m.link) {
+    if (m.link && isSafeLink(m.link)) {
       var link = document.createElement('a');
       link.className = 'maplibre-popup__link';
       link.href = m.link;
@@ -93,7 +106,11 @@
       map.fitBounds(boundsOf(markers), { padding: 48, maxZoom: 16, duration: 0 });
     } else if (markers.length === 1 && !cfg.center) {
       map.setCenter([markers[0].lng, markers[0].lat]);
-      map.setZoom(cfg.zoom || 15);
+      map.setZoom(typeof cfg.zoom === 'number' ? cfg.zoom : 15);
+    } else if (markers.length > 1 && !cfg.fitBounds && !cfg.center) {
+      // Kein fitBounds und kein fester Mittelpunkt: auf die Mitte der Marker-Bounds zentrieren.
+      map.setCenter(boundsOf(markers).getCenter());
+      map.setZoom(typeof cfg.zoom === 'number' ? cfg.zoom : 13);
     }
   }
 
@@ -107,8 +124,10 @@
       + '<path d="M15 0.5C7.3 0.5 1 6.8 1 14.5C1 24.5 15 39.5 15 39.5C15 39.5 29 24.5 29 14.5C29 6.8 22.7 0.5 15 0.5Z"/>'
       + '</svg><span class="maplibre-pin__icon"></span>';
     var glyph = wrap.querySelector('.maplibre-pin__icon');
-    glyph.style.webkitMaskImage = 'url("' + iconUrl + '")';
-    glyph.style.maskImage = 'url("' + iconUrl + '")';
+    // encodeURI kodiert die URL; " und \ zusätzlich maskieren, damit ein Dateiname nicht aus url("...") ausbricht.
+    var safeUrl = encodeURI(iconUrl).replace(/\\/g, '%5C').replace(/"/g, '%22');
+    glyph.style.webkitMaskImage = 'url("' + safeUrl + '")';
+    glyph.style.maskImage = 'url("' + safeUrl + '")';
     return wrap;
   }
 
@@ -210,7 +229,7 @@
       el.addEventListener('click', function () {
         map.getSource('maplibre-markers').getClusterExpansionZoom(clusterId).then(function (zoom) {
           map.easeTo({ center: coords, zoom: zoom });
-        });
+        }).catch(function () {});
       });
 
       return new maplibregl.Marker({ element: el }).setLngLat(coords);
@@ -262,7 +281,7 @@
       container: el,
       style: cfg.style,
       center: cfg.center || [0, 0],
-      zoom: cfg.zoom || 13,
+      zoom: typeof cfg.zoom === 'number' ? cfg.zoom : 13,
       attributionControl: true,
       scrollZoom: !clickToActivate,
       dragPan: !clickToActivate,
