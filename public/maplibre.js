@@ -160,26 +160,30 @@
     return wrap;
   }
 
+  // Popup-Abstand je Anker: MapLibre wählt am Kartenrand einen anderen Anker, ein einzelner Vektor
+  // würde die Blase dann über den Pin schieben. Punkt = Pin-Spitze, Kopf reicht bis y≈-42.
+  var POPUP_OFFSET = {
+    bottom: [0, -42], top: [0, 2], left: [16, -26], right: [-16, -26],
+    'top-left': [12, -18], 'top-right': [-12, -18], 'bottom-left': [12, -34], 'bottom-right': [-12, -34]
+  };
+
   // Gibt eine Filterfunktion zurück: hidden = { Kategorie: true }, Marker ohne Kategorie bleiben sichtbar.
   function addPins(map, cfg) {
     var entries = [];
 
     cfg.markers.forEach(function (m) {
       var marker;
-      var popupOffset;
 
       if (m.icon) {
         marker = new maplibregl.Marker({ element: buildPinElement(m.color || cfg.markerColor, m.icon), anchor: 'bottom' });
-        popupOffset = [0, -42];
       } else {
         marker = new maplibregl.Marker({ color: m.color || cfg.markerColor });
-        popupOffset = 24;
       }
 
       marker.setLngLat([m.lng, m.lat]);
 
       if (hasPopup(m, cfg)) {
-        marker.setPopup(new maplibregl.Popup({ offset: popupOffset }).setDOMContent(buildPopup(m, cfg)));
+        marker.setPopup(new maplibregl.Popup({ offset: POPUP_OFFSET }).setDOMContent(buildPopup(m, cfg)));
       }
 
       marker.addTo(map);
@@ -269,7 +273,7 @@
       marker.setLngLat(coords);
 
       if (hasPopup(m, cfg)) {
-        marker.setPopup(new maplibregl.Popup({ offset: m.icon ? [0, -42] : 24 }).setDOMContent(buildPopup(m, cfg)));
+        marker.setPopup(new maplibregl.Popup({ offset: POPUP_OFFSET }).setDOMContent(buildPopup(m, cfg)));
       }
 
       return marker;
