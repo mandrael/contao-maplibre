@@ -19,6 +19,8 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ### Behoben
+- **Ankerlinks im Popup:** `#anker` springt auf die aktuelle Seite, nicht wegen Contaos `<base href>`
+  auf die Startseite.
 - **Theme-unabhängige Darstellung:** Zoom-Knöpfe, Popup (Schließer, Titel, Adresse, Link) und Attribution
   haben feste Stile und übernehmen keine globalen `button`-/`a`-/Schriftstile des Themes mehr.
 - **Icon „Schule" entfernt** (Apfel und Bleistift passen nicht zu Ausbildungsorten); für Bildung dient

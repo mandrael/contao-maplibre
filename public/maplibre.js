@@ -85,7 +85,8 @@
     if (m.link && isSafeLink(m.link)) {
       var link = document.createElement('a');
       link.className = 'maplibre-popup__link';
-      link.href = m.link;
+      // Contao setzt <base href> auf die Startseite: "#anker" würde dorthin springen statt auf diese Seite.
+      link.href = m.link.charAt(0) === '#' ? window.location.pathname + window.location.search + m.link : m.link;
       link.textContent = (window.MAPLIBRE_I18N && window.MAPLIBRE_I18N.more) || 'Mehr erfahren';
       wrap.appendChild(link);
     }
