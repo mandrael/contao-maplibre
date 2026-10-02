@@ -26,6 +26,9 @@ Eine gemeinsame Codebasis für die drei Contao-LTS-Versionen **4.13, 5.3 und 5.7
 - **Marker-Symbole:** Kuratiertes, kartenrelevantes Icon-Set ([Maki](https://labs.mapbox.com/maki-icons/),
   CC0) – im Backend über einen visuellen Picker wählbar (farbiger Pin mit weißem Icon, wie Google My Maps).
   Gruppen-Standard im Karten-Element, pro Standort überschreibbar; zusätzlich **eigenes SVG** hochladbar.
+- **Kategorien-Legende:** Besucher blenden Kategorien (z. B. Übernachtung, Essen) per Checkbox ein und aus,
+  wie bei Google My Maps; je Kategorie eine eigene Pin-Farbe. Pro Standort ein Beschreibungstext im Popup
+  und optional ein Knopf „In Google Maps öffnen" (neuer Tab).
 - **Multi-Marker & Cluster:** Beliebig viele Marker pro Karte; optional als zusammenfassende,
   nummerierte Cluster-Kreise, die beim Klick in die Region zoomen.
 - **Optik wie gewohnt:** OpenFreeMap-Stil `bright` (alternativ `liberty`/`positron`), dezente

@@ -25,6 +25,9 @@ A single code base for the three Contao LTS versions **4.13, 5.3 and 5.7** (incl
 - **Marker symbols:** a curated, map-relevant icon set ([Maki](https://labs.mapbox.com/maki-icons/),
   CC0) – chosen in the back end via a visual picker (coloured pin with a white icon, like Google My Maps).
   Group default on the map element, overridable per location; plus a **custom SVG** upload.
+- **Category legend:** visitors show and hide categories (e.g. accommodation, food) with checkboxes, as in
+  Google My Maps; one pin colour per category. Each location can carry a popup description and, optionally,
+  an “Open in Google Maps” button (new tab).
 - **Multi-markers & clustering:** any number of markers per map; optionally as summarising, numbered
   cluster circles that zoom into the region on click.
 - **Familiar look:** OpenFreeMap style `bright` (alternatively `liberty`/`positron`), subtle marker
