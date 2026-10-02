@@ -31,6 +31,9 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **Sonderzeichen aus dem Backend:** Im Backend eingegebene Kategorie-Farben wirkten nicht, weil Contao das „#"
   kodiert speichert; „&" in Titel, Kategorie und Adresse erschien als „&amp;" und teilte Kategorien in der
   Legende. Felder speichern jetzt Klartext, Altbestand wird bei der Ausgabe dekodiert.
+- **Backend-Auswahlfelder (Sicherheit):** Standort- und Kategorie-Namen werden in den Auswahllisten des
+  Karten-Elements maskiert ausgegeben; HTML in einem Namen konnte dort vorher Skript ausführen.
+- **Kategorie-Filter:** lädt nur noch die passenden Standorte per ID statt aller veröffentlichten.
 - **Popup per Tastatur schließen:** Escape schließt die offene Blase.
 - **Popup am Kartenrand:** Die Blase öffnet immer über dem Pin (wie bei Google Maps); passt sie nicht in die
   Karte, verschiebt sich die Karte. Vorher wechselte die Blase am Rand die Seite, ragte aus der Karte oder

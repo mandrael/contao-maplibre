@@ -62,7 +62,7 @@ final class LocationsHelper
 
         // Wert im Klartext (passt zu Alt- und Neubestand), Label maskiert (Contao gibt es ungefiltert aus).
         foreach ($rows as $row) {
-            $category = self::plain((string) $row);
+            $category = self::category((string) $row);
             $options[$category] = self::escape($category);
         }
 
@@ -76,6 +76,16 @@ final class LocationsHelper
     public static function plain(string $value): string
     {
         return trim(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
+    /**
+     * Kategorie-Name als Schlüssel für Auswahl, Vergleich, Farbe und Legende: Klartext ohne spitze Klammern.
+     * Der Name landet als Wert im Select des Karten-Elements; Contao gibt einen nicht mehr vorhandenen Wert
+     * ("unknown option") ungefiltert aus. Ohne "<" und ">" kann dort kein HTML entstehen.
+     */
+    public static function category(string $value): string
+    {
+        return trim(str_replace(['<', '>'], '', self::plain($value)));
     }
 
     private static function escape(string $value): string
@@ -106,11 +116,11 @@ final class LocationsHelper
         // Kategorien im Klartext vergleichen: Altbestand kann HTML-kodiert gespeichert sein ("Essen &amp; Café").
         // Daher erst nur id/category lesen und in PHP zuordnen, dann die Treffer vollständig per ID laden.
         if ($categories) {
-            $categories = array_map(self::plain(...), $categories);
+            $categories = array_map(self::category(...), $categories);
             $rows = $this->connection->fetchAllAssociative('SELECT id, category FROM tl_maplibre_location WHERE '.self::PUBLISHED, $params, $types);
 
             foreach ($rows as $row) {
-                if (\in_array(self::plain((string) $row['category']), $categories, true)) {
+                if (\in_array(self::category((string) $row['category']), $categories, true)) {
                     $ids[] = (int) $row['id'];
                 }
             }

@@ -27,8 +27,15 @@ class LocationsHelperTest extends TestCase
         // Alt- (kodiert) und Neubestand (Klartext) ergeben eine Option; das Label enthält kein ausführbares HTML.
         $this->assertSame([
             'Essen & Café' => 'Essen &amp; Café',
-            'X <img src=x onerror=alert(1)>' => 'X &lt;img src=x onerror=alert(1)&gt;',
+            'X img src=x onerror=alert(1)' => 'X img src=x onerror=alert(1)',
         ], $options);
+    }
+
+    public function testCategoryNeverContainsAngleBrackets(): void
+    {
+        // Gespeicherter Wert im Element kann als "unknown option" ungefiltert ausgegeben werden.
+        $this->assertSame('img src=x onerror=alert(1)', LocationsHelper::category('&#60;img src=x onerror=alert(1)>'));
+        $this->assertSame('Essen & Café', LocationsHelper::category('Essen &amp; Café'));
     }
 
     public function testLocationOptionsAreEscaped(): void

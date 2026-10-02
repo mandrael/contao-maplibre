@@ -6,7 +6,7 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <div class="maplibre-map" id="<?= $this->mapId ?>" data-height="<?= (int) $this->mapHeight ?>" data-maplibre="<?= \Contao\StringUtil::specialchars($this->mapConfig) ?>"></div>
+  <div class="maplibre-map" id="<?= \Contao\StringUtil::specialchars($this->mapId) ?>" data-height="<?= (int) $this->mapHeight ?>" data-maplibre="<?= \Contao\StringUtil::specialchars($this->mapConfig) ?>"></div>
 
 </div>
 

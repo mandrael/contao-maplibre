@@ -86,7 +86,7 @@ final class InlineMarkerGeocodeListener
         if ($failed) {
             Message::addError(sprintf(
                 $GLOBALS['TL_LANG']['tl_content']['maplibreGeocodeError'] ?? 'Geocoding fehlgeschlagen für: %s',
-                implode('; ', $failed)
+                htmlspecialchars(implode('; ', $failed), ENT_QUOTES | ENT_HTML5, 'UTF-8')
             ));
         }
     }

@@ -70,7 +70,7 @@ class ContentMaplibreMap extends ContentElement
             }
 
             $icon = $this->resolveLocationIcon($row, $basePath) ?: $defaultIcon;
-            $category = LocationsHelper::plain((string) ($row['category'] ?? ''));
+            $category = LocationsHelper::category((string) ($row['category'] ?? ''));
 
             $markers[] = new Marker(
                 (float) $row['latitude'],
@@ -154,7 +154,7 @@ class ContentMaplibreMap extends ContentElement
 
         foreach (StringUtil::deserialize($this->maplibre_category_colors, true) as $pair) {
             // Das Key-Value-Feld speichert "#" ohne decodeEntities als "&#35;" – deshalb erst dekodieren.
-            $category = LocationsHelper::plain((string) ($pair['key'] ?? ''));
+            $category = LocationsHelper::category((string) ($pair['key'] ?? ''));
             $hex = ltrim(LocationsHelper::plain((string) ($pair['value'] ?? '')), '#');
 
             if ('' !== $category && preg_match('/^[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?$/', $hex)) {
