@@ -78,6 +78,8 @@ class ContentMaplibreMap extends ContentElement
                 (string) ($row['link'] ?? ''),
                 null,
                 '' !== $icon ? $icon : null,
+                trim((string) ($row['description'] ?? '')),
+                trim((string) ($row['category'] ?? '')),
             );
         }
 
@@ -108,6 +110,8 @@ class ContentMaplibreMap extends ContentElement
             'cluster' => (bool) $this->maplibre_cluster,
             'interactive' => $this->maplibre_interactive ? 'always' : 'click',
             'markerColor' => $this->normalizeColor((string) $this->maplibre_marker_color),
+            'legend' => (bool) $this->maplibre_legend,
+            'legendTitle' => (string) ($GLOBALS['TL_LANG']['MSC']['maplibreLegend'] ?? 'Kategorien'),
         ];
 
         $renderer->registerAssets();

@@ -32,6 +32,8 @@ final class IconCatalog
         'art-gallery',
         'shop',
         'parking',
+        'bus',
+        'bank',
         'information',
         'star',
         'heart',

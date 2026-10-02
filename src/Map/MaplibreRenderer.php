@@ -63,6 +63,8 @@ final class MaplibreRenderer
             'interactive' => 'always' === ($options['interactive'] ?? 'click') ? 'always' : 'click',
             'navigation' => (bool) ($options['navigation'] ?? true),
             'markerColor' => (string) ($options['markerColor'] ?? self::DEFAULT_MARKER_COLOR),
+            'legend' => (bool) ($options['legend'] ?? false),
+            'legendTitle' => (string) ($options['legendTitle'] ?? 'Kategorien'),
             'markers' => $markerData,
         ];
     }

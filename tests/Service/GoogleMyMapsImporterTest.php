@@ -114,4 +114,30 @@ class GoogleMyMapsImporterTest extends TestCase
 
         $this->assertSame(['Gut'], array_column(GoogleMyMapsImporter::parseKml($kml), 'name'));
     }
+
+    public function testParseKmlMapsGoogleIconsToCatalog(): void
+    {
+        $kml = <<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <Placemark><name>Parkplatz</name><styleUrl>#icon-1453-nodesc</styleUrl><Point><coordinates>13.05,47.78,0</coordinates></Point></Placemark>
+                <Placemark><name>Bus</name><styleUrl>#icon-1423-0288D1</styleUrl><Point><coordinates>13.05,47.78,0</coordinates></Point></Placemark>
+                <Placemark><name>Unbekannt</name><styleUrl>#icon-9999</styleUrl><Point><coordinates>13.05,47.78,0</coordinates></Point></Placemark>
+                <Placemark><name>Ohne Stil</name><Point><coordinates>13.05,47.78,0</coordinates></Point></Placemark>
+              </Document>
+            </kml>
+            XML;
+
+        $this->assertSame(['parking', 'bus', '', ''], array_column(GoogleMyMapsImporter::parseKml($kml), 'icon'));
+    }
+
+    public function testGoogleIconMappingOnlyTargetsCatalogIcons(): void
+    {
+        $map = (new \ReflectionClassConstant(GoogleMyMapsImporter::class, 'GOOGLE_ICONS'))->getValue();
+
+        foreach ($map as $google => $icon) {
+            $this->assertTrue(\Mandrael\ContaoMaplibreBundle\Map\IconCatalog::has($icon), "Google-Symbol $google zeigt auf unbekanntes Icon $icon");
+        }
+    }
 }

@@ -82,6 +82,13 @@
       wrap.appendChild(address);
     }
 
+    if (m.description) {
+      var description = document.createElement('div');
+      description.className = 'maplibre-popup__description';
+      description.textContent = m.description;
+      wrap.appendChild(description);
+    }
+
     if (m.link && isSafeLink(m.link)) {
       var link = document.createElement('a');
       link.className = 'maplibre-popup__link';
@@ -92,6 +99,10 @@
     }
 
     return wrap;
+  }
+
+  function hasPopup(m) {
+    return !!(m.title || m.address || m.description || m.link);
   }
 
   function boundsOf(markers) {
@@ -115,6 +126,13 @@
     }
   }
 
+  function setMask(el, iconUrl) {
+    // encodeURI kodiert die URL; " und \ zusätzlich maskieren, damit ein Dateiname nicht aus url("...") ausbricht.
+    var safeUrl = encodeURI(iconUrl).replace(/\\/g, '%5C').replace(/"/g, '%22');
+    el.style.webkitMaskImage = 'url("' + safeUrl + '")';
+    el.style.maskImage = 'url("' + safeUrl + '")';
+  }
+
   // Farbiger Tropfen-Pin (Markenfarbe) mit weißem Icon-Glyph (per CSS-Maske) – wie Google My Maps.
   // Die Pin-Spitze sitzt bei viewBox-Punkt (15,40) unten-mittig, daher anchor 'bottom'.
   function buildPinElement(color, iconUrl) {
@@ -124,15 +142,14 @@
     wrap.innerHTML = '<svg class="maplibre-pin__shape" viewBox="0 0 30 40" aria-hidden="true">'
       + '<path d="M15 0.5C7.3 0.5 1 6.8 1 14.5C1 24.5 15 39.5 15 39.5C15 39.5 29 24.5 29 14.5C29 6.8 22.7 0.5 15 0.5Z"/>'
       + '</svg><span class="maplibre-pin__icon"></span>';
-    var glyph = wrap.querySelector('.maplibre-pin__icon');
-    // encodeURI kodiert die URL; " und \ zusätzlich maskieren, damit ein Dateiname nicht aus url("...") ausbricht.
-    var safeUrl = encodeURI(iconUrl).replace(/\\/g, '%5C').replace(/"/g, '%22');
-    glyph.style.webkitMaskImage = 'url("' + safeUrl + '")';
-    glyph.style.maskImage = 'url("' + safeUrl + '")';
+    setMask(wrap.querySelector('.maplibre-pin__icon'), iconUrl);
     return wrap;
   }
 
+  // Gibt eine Filterfunktion zurück: hidden = { Kategorie: true }, Marker ohne Kategorie bleiben sichtbar.
   function addPins(map, cfg) {
+    var entries = [];
+
     cfg.markers.forEach(function (m) {
       var marker;
       var popupOffset;
@@ -147,12 +164,22 @@
 
       marker.setLngLat([m.lng, m.lat]);
 
-      if (m.title || m.address || m.link) {
+      if (hasPopup(m)) {
         marker.setPopup(new maplibregl.Popup({ offset: popupOffset }).setDOMContent(buildPopup(m)));
       }
 
       marker.addTo(map);
+      entries.push({ marker: marker, category: m.category || '', shown: true });
     });
+
+    return function (hidden) {
+      entries.forEach(function (e) {
+        var show = !(e.category && hidden[e.category]);
+        if (show === e.shown) { return; }
+        e.shown = show;
+        if (show) { e.marker.addTo(map); } else { e.marker.remove(); }
+      });
+    };
   }
 
   // Nummerierter Kreis-Marker für einen Cluster.
@@ -180,14 +207,25 @@
           address: m.address || '',
           link: m.link || '',
           icon: m.icon || '',
-          color: m.color || ''
+          color: m.color || '',
+          description: m.description || '',
+          category: m.category || ''
         }
       };
     });
 
+    function collection(hidden) {
+      return {
+        type: 'FeatureCollection',
+        features: features.filter(function (f) {
+          return !(f.properties.category && hidden[f.properties.category]);
+        })
+      };
+    }
+
     map.addSource('maplibre-markers', {
       type: 'geojson',
-      data: { type: 'FeatureCollection', features: features },
+      data: collection({}),
       cluster: true,
       clusterRadius: cfg.clusterRadius || 50,
       clusterMaxZoom: 16
@@ -205,7 +243,7 @@
     var onScreen = {};
 
     function makePointMarker(coords, p) {
-      var m = { lng: coords[0], lat: coords[1], title: p.title, address: p.address, link: p.link, icon: p.icon, color: p.color };
+      var m = { lng: coords[0], lat: coords[1], title: p.title, address: p.address, link: p.link, icon: p.icon, color: p.color, description: p.description, category: p.category };
       var marker;
 
       if (m.icon) {
@@ -216,7 +254,7 @@
 
       marker.setLngLat(coords);
 
-      if (m.title || m.address || m.link) {
+      if (hasPopup(m)) {
         marker.setPopup(new maplibregl.Popup({ offset: m.icon ? [0, -42] : 24 }).setDOMContent(buildPopup(m)));
       }
 
@@ -267,6 +305,101 @@
       if (map.isSourceLoaded('maplibre-markers')) { updateMarkers(); }
     });
     map.on('moveend', updateMarkers);
+
+    return function (hidden) {
+      // Cluster-IDs gelten nur für den jeweiligen Datensatz: alte HTML-Marker verwerfen, 'render' baut neu auf.
+      for (var k in onScreen) { onScreen[k].remove(); }
+      markers = {};
+      onScreen = {};
+      map.getSource('maplibre-markers').setData(collection(hidden));
+    };
+  }
+
+  // Kategorien-Legende als MapLibre-Control. Auf schmalen Karten startet sie eingeklappt.
+  function buildLegend(cfg, onChange, collapsed) {
+    var cats = [];
+    // Ohne Prototyp: eine Kategorie namens "constructor" oder "__proto__" darf nichts Geerbtes treffen.
+    var byCat = Object.create(null);
+
+    cfg.markers.forEach(function (m) {
+      if (!m.category) { return; }
+      if (!byCat[m.category]) {
+        byCat[m.category] = { name: m.category, count: 0, icon: m.icon || '', color: m.color || cfg.markerColor };
+        cats.push(byCat[m.category]);
+      }
+      byCat[m.category].count++;
+    });
+
+    // Eine einzige Kategorie auszublenden hieße, die Karte zu leeren; die Legende lohnt erst ab zwei.
+    if (cats.length < 2) { return null; }
+
+    var title = cfg.legendTitle || 'Kategorien';
+    var hidden = Object.create(null);
+    var box;
+
+    return {
+      onAdd: function () {
+        box = document.createElement('div');
+        box.className = 'maplibregl-ctrl maplibre-legend';
+        box.setAttribute('role', 'group');
+        box.setAttribute('aria-label', title);
+
+        var list = document.createElement('div');
+        list.className = 'maplibre-legend__list';
+
+        if (collapsed !== null) {
+          var toggle = document.createElement('button');
+          toggle.type = 'button';
+          toggle.className = 'maplibre-legend__toggle';
+          toggle.textContent = title;
+          var sync = function () {
+            box.classList.toggle('maplibre-legend--collapsed', collapsed);
+            toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          };
+          toggle.addEventListener('click', function () { collapsed = !collapsed; sync(); });
+          box.appendChild(toggle);
+          sync();
+        }
+
+        cats.forEach(function (c) {
+          var label = document.createElement('label');
+          label.className = 'maplibre-legend__item';
+
+          var input = document.createElement('input');
+          input.type = 'checkbox';
+          input.checked = true;
+          input.addEventListener('change', function () {
+            if (input.checked) { delete hidden[c.name]; } else { hidden[c.name] = true; }
+            onChange(hidden);
+          });
+
+          var icon = document.createElement('span');
+          icon.className = 'maplibre-legend__icon' + (c.icon ? '' : ' maplibre-legend__icon--dot');
+          icon.style.backgroundColor = c.color;
+          if (c.icon) { setMask(icon, c.icon); }
+
+          var name = document.createElement('span');
+          name.className = 'maplibre-legend__name';
+          name.textContent = c.name;
+
+          var count = document.createElement('span');
+          count.className = 'maplibre-legend__count';
+          count.textContent = String(c.count);
+
+          label.appendChild(input);
+          label.appendChild(icon);
+          label.appendChild(name);
+          label.appendChild(count);
+          list.appendChild(label);
+        });
+
+        box.appendChild(list);
+        return box;
+      },
+      onRemove: function () {
+        if (box && box.parentNode) { box.parentNode.removeChild(box); }
+      }
+    };
   }
 
   function initMap(el) {
@@ -321,14 +454,32 @@
     // HTML-Marker und Kamera benoetigen den geladenen Style NICHT und werden sofort gesetzt – robust
     // auch dann, wenn das 'load'-Event verzoegert ist. Nur die Cluster-Layer (addSource/addLayer)
     // brauchen den fertigen Style.
+    // Die Legende filtert über applyFilter; im Cluster-Modus ist die Funktion erst nach dem Style-Load da.
+    var applyFilter = null;
+    var pendingHidden = null;
+
+    function setFilter(fn) {
+      applyFilter = fn;
+      if (pendingHidden) { fn(pendingHidden); }
+    }
+
     if (cfg.cluster && cfg.markers.length > 1) {
       if (map.isStyleLoaded()) {
-        addClustered(map, cfg);
+        setFilter(addClustered(map, cfg));
       } else {
-        map.on('load', function () { addClustered(map, cfg); });
+        map.on('load', function () { setFilter(addClustered(map, cfg)); });
       }
     } else {
-      addPins(map, cfg);
+      setFilter(addPins(map, cfg));
+    }
+
+    if (cfg.legend) {
+      var legend = buildLegend(cfg, function (hidden) {
+        pendingHidden = hidden;
+        if (applyFilter) { applyFilter(hidden); }
+      }, el.clientWidth > 0 && el.clientWidth < 480 ? true : null);
+
+      if (legend) { map.addControl(legend, 'top-left'); }
     }
 
     applyView();
@@ -352,8 +503,16 @@
       el.classList.add('maplibre-map--active');
     };
 
-    el.addEventListener('click', activate, { once: true });
-    el.addEventListener('touchstart', activate, { once: true, passive: true });
+    // Bedienung der Legende soll die Karte nicht aktivieren (sonst fängt sie danach das Seiten-Scrollen ab).
+    var onFirstTouch = function (e) {
+      if (e.target && e.target.closest && e.target.closest('.maplibre-legend')) { return; }
+      el.removeEventListener('click', onFirstTouch);
+      el.removeEventListener('touchstart', onFirstTouch);
+      activate();
+    };
+
+    el.addEventListener('click', onFirstTouch);
+    el.addEventListener('touchstart', onFirstTouch, { passive: true });
   }
 
   function initAll() {

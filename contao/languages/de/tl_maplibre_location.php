@@ -10,6 +10,7 @@ $GLOBALS['TL_LANG']['tl_maplibre_location']['publish_legend']  = 'Veröffentlich
 
 // Felder
 $GLOBALS['TL_LANG']['tl_maplibre_location']['title']              = ['Titel', 'Name des Standorts (erscheint im Popup).'];
+$GLOBALS['TL_LANG']['tl_maplibre_location']['description']        = ['Beschreibung', 'Kurzer Text im Popup, z. B. Öffnungszeiten oder Ruhetag.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['category']           = ['Kategorie', 'Frei wählbare Kategorie zur Gruppierung (z. B. „Kursorte").'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['street']             = ['Straße und Hausnummer', 'Grundlage für die automatische Koordinaten-Ermittlung.'];
 $GLOBALS['TL_LANG']['tl_maplibre_location']['postal']             = ['PLZ', ''];

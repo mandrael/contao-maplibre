@@ -14,6 +14,7 @@ $GLOBALS['TL_LANG']['tl_content']['maplibre_height']       = ['Height (pixels)',
 $GLOBALS['TL_LANG']['tl_content']['maplibre_marker_color'] = ['Marker colour', 'Hex colour of the markers (default 4a6b3a).'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_default_icon']  = ['Default symbol (group)', 'Symbol for all markers of this map. Individual locations can override it.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_cluster']      = ['Cluster markers', 'For many markers, show summarising numbered circles; a click zooms into the region.'];
+$GLOBALS['TL_LANG']['tl_content']['maplibre_legend']       = ['Show category legend', 'Visitors can show and hide categories on the map (e.g. accommodation, food).'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_interactive']  = ['Map interactive immediately (captures page scroll)', 'Default (off): scrolling over the map keeps scrolling the page – a click on the map first activates wheel zoom and panning (like the reference). On: the map reacts to wheel/drag immediately and captures page scrolling.'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_fit_bounds']   = ['Fit all markers automatically', 'Choose zoom and viewport automatically so that all markers are visible (overrides centre/zoom).'];
 $GLOBALS['TL_LANG']['tl_content']['maplibre_zoom']         = ['Zoom level', 'Used when not fitting automatically (default 15).'];

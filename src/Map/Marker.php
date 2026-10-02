@@ -20,6 +20,8 @@ final class Marker
         string $link = '',
         public readonly ?string $color = null,
         public readonly ?string $icon = null,
+        public readonly string $description = '',
+        public readonly string $category = '',
     ) {
         // An dieser einen Stelle bereinigt, damit toArray() (Inhaltselement + öffentliche
         // Renderer-API) nie ein gefährliches Schema (javascript:/data:/vbscript: ...) ausliefert.
@@ -51,6 +53,14 @@ final class Marker
 
         if (null !== $this->icon && '' !== $this->icon) {
             $data['icon'] = $this->icon;
+        }
+
+        if ('' !== $this->description) {
+            $data['description'] = $this->description;
+        }
+
+        if ('' !== $this->category) {
+            $data['category'] = $this->category;
         }
 
         return $data;

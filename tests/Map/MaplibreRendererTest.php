@@ -37,6 +37,18 @@ class MaplibreRendererTest extends TestCase
         $this->assertCount(1, $config['markers'], 'Marker auf [0,0] muss verworfen werden.');
     }
 
+    public function testBuildConfigPassesLegendOptions(): void
+    {
+        $renderer = new MaplibreRenderer();
+
+        $this->assertFalse($renderer->buildConfig([])['legend']);
+
+        $config = $renderer->buildConfig([], ['legend' => true, 'legendTitle' => 'Categories']);
+
+        $this->assertTrue($config['legend']);
+        $this->assertSame('Categories', $config['legendTitle']);
+    }
+
     public function testUnknownStyleFallsBackToBright(): void
     {
         $config = (new MaplibreRenderer())->buildConfig([], ['style' => 'does-not-exist']);

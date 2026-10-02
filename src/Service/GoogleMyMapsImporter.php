@@ -11,10 +11,30 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Importiert die Marker einer "Google My Maps"-Karte (öffentliches KML) als zentrale Standorte.
  * Praktisch für die Migration bestehender Google-Karten (z. B. die NK-Kursorte-Karte). Es werden nur
  * Punkte (Point/coordinates) übernommen; Linien und Flächen werden übersprungen. Es findet kein
- * Geocoding statt – Placemarks ohne gültige Punktkoordinaten werden verworfen.
+ * Geocoding statt – Placemarks ohne gültige Punktkoordinaten werden verworfen. Googles Marker-Symbol
+ * (styleUrl "#icon-<Nummer>…") wird, wo bekannt, auf ein passendes Icon aus dem IconCatalog abgebildet.
  */
 final class GoogleMyMapsImporter
 {
+    /**
+     * Googles My-Maps-Symbolnummern → IconCatalog. Unbekannte Nummern bleiben ohne Icon (Gruppen-Default).
+     */
+    private const GOOGLE_ICONS = [
+        '1347' => 'college',     // Seminar/Schule
+        '1453' => 'parking',
+        '1423' => 'bus',
+        '1035' => 'lodging',
+        '1015' => 'lodging',     // Hostel
+        '1085' => 'restaurant',
+        '991' => 'cafe',
+        '1101' => 'shop',
+        '973' => 'bank',
+        '1504' => 'hospital',
+        '1624' => 'hospital',
+        '1671' => 'place-of-worship',
+        '1899' => 'marker',
+    ];
+
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private readonly Connection $connection,
@@ -53,6 +73,7 @@ final class GoogleMyMapsImporter
                 'latitude' => (string) $placemark['lat'],
                 'longitude' => (string) $placemark['lng'],
                 'category' => $category,
+                'icon' => $placemark['icon'],
                 'published' => '1',
                 'sorting' => $sorting,
             ]);
@@ -66,7 +87,7 @@ final class GoogleMyMapsImporter
     }
 
     /**
-     * @return array<array{name: string, lat: float, lng: float}>
+     * @return array<array{name: string, lat: float, lng: float, icon: string}>
      */
     public static function parseKml(string $kml): array
     {
@@ -108,7 +129,14 @@ final class GoogleMyMapsImporter
                 continue;
             }
 
-            $out[] = ['name' => $name, 'lat' => $lat, 'lng' => $lng];
+            $styleNodes = $placemark->xpath('*[local-name()="styleUrl"]');
+            $icon = '';
+
+            if ($styleNodes && preg_match('/icon-(\d+)/', (string) $styleNodes[0], $m)) {
+                $icon = self::GOOGLE_ICONS[$m[1]] ?? '';
+            }
+
+            $out[] = ['name' => $name, 'lat' => $lat, 'lng' => $lng, 'icon' => $icon];
         }
 
         return $out;

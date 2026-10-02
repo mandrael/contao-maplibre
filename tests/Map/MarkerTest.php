@@ -47,6 +47,22 @@ class MarkerTest extends TestCase
         $this->assertArrayNotHasKey('color', $array);
     }
 
+    public function testToArrayIncludesDescriptionAndCategoryWhenSet(): void
+    {
+        $array = (new Marker(47.81, 13.04, 'Hotel', '', '', null, null, "Ruhetag: Mo\nBar bis 22 Uhr", 'Übernachtung'))->toArray();
+
+        $this->assertSame("Ruhetag: Mo\nBar bis 22 Uhr", $array['description']);
+        $this->assertSame('Übernachtung', $array['category']);
+    }
+
+    public function testToArrayOmitsEmptyDescriptionAndCategory(): void
+    {
+        $array = (new Marker(47.81, 13.04, 'Hotel'))->toArray();
+
+        $this->assertArrayNotHasKey('description', $array);
+        $this->assertArrayNotHasKey('category', $array);
+    }
+
     public function testIsValidRejectsNullIsland(): void
     {
         $this->assertFalse((new Marker(0.0, 0.0))->isValid());

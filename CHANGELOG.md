@@ -7,6 +7,11 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 ## [0.2.0] – noch nicht veröffentlicht
 
 ### Hinzugefügt
+- **Kategorien-Legende:** Option im Karten-Element; Besucher blenden Kategorien (z. B. Übernachtung,
+  Essen) per Checkbox ein und aus – wie bei Google My Maps. Funktioniert im Pin- und Cluster-Modus,
+  vor der Aktivierung der Karte und auf schmalen Karten eingeklappt.
+- **Beschreibung je Standort:** kurzer Text im Popup (Zeilenumbrüche bleiben erhalten), z. B. Ruhetage.
+- **Icons Bus und Bank** (Maki, CC0); der KML-Import ordnet Googles Marker-Symbole passenden Icons zu.
 - **Marker-Symbole:** kuratiertes Maki-Icon-Set (CC0, `public/icons/`) mit visuellem Backend-Picker;
   Gruppen-Standard im Karten-Element, pro Standort überschreibbar; zusätzlich eigenes SVG hochladbar.
   Darstellung als farbiger Pin mit weißem Icon-Glyph (wie Google My Maps).

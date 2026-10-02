@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
     ],
 
     'palettes' => [
-        'default' => '{location_legend},title,category;{address_legend},street,postal,city,country,maplibre_regeocode;{coords_legend},latitude,longitude;{marker_legend},icon,iconSvg;{link_legend},link;{publish_legend},published,start,stop',
+        'default' => '{location_legend},title,category,description;{address_legend},street,postal,city,country,maplibre_regeocode;{coords_legend},latitude,longitude;{marker_legend},icon,iconSvg;{link_legend},link;{publish_legend},published,start,stop',
     ],
 
     'fields' => [
@@ -93,6 +93,12 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
             'inputType' => 'text',
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
             'sql'       => "varchar(128) NOT NULL default ''",
+        ],
+        'description' => [
+            'exclude'   => true,
+            'inputType' => 'textarea',
+            'eval'      => ['decodeEntities' => true, 'tl_class' => 'clr', 'style' => 'height:80px'],
+            'sql'       => 'text NULL',
         ],
         'street' => [
             'exclude'   => true,

@@ -10,7 +10,7 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = [InlineMarke
 $GLOBALS['TL_DCA']['tl_content']['palettes']['maplibre_map'] =
     '{type_legend},type,headline;'
     .'{maplibre_source_legend},maplibre_locations,maplibre_categories,maplibre_inline;'
-    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_default_icon,maplibre_cluster,maplibre_interactive;'
+    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_default_icon,maplibre_cluster,maplibre_interactive,maplibre_legend;'
     .'{maplibre_focus_legend},maplibre_fit_bounds,maplibre_zoom,maplibre_center_lat,maplibre_center_lng;'
     .'{template_legend:hide},customTpl;'
     .'{protected_legend:hide},protected;'
@@ -77,6 +77,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_default_icon'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_cluster'] = [
+    'exclude'   => true,
+    'inputType' => 'checkbox',
+    'eval'      => ['tl_class' => 'w50 m12'],
+    'sql'       => "char(1) NOT NULL default ''",
+];
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_legend'] = [
     'exclude'   => true,
     'inputType' => 'checkbox',
     'eval'      => ['tl_class' => 'w50 m12'],

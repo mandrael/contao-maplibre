@@ -3,6 +3,9 @@
 // Inhaltselement
 $GLOBALS['TL_LANG']['CTE']['maplibre_map'] = ['MapLibre Karte', 'Eine MapLibre-Karte (OpenFreeMap) mit einem oder mehreren Markern einfügen.'];
 
+// Frontend: Titel der Kategorien-Legende
+$GLOBALS['TL_LANG']['MSC']['maplibreLegend'] = 'Kategorien';
+
 // Icon-Picker
 $GLOBALS['TL_LANG']['MSC']['maplibreIconNone'] = 'Standard-Pin';
 $GLOBALS['TL_LANG']['MSC']['maplibreIcons'] = [
@@ -24,6 +27,8 @@ $GLOBALS['TL_LANG']['MSC']['maplibreIcons'] = [
     'art-gallery'      => 'Galerie',
     'shop'             => 'Geschäft',
     'parking'          => 'Parkplatz',
+    'bus'              => 'Bushaltestelle',
+    'bank'             => 'Bank / Bankomat',
     'information'      => 'Information',
     'star'             => 'Stern',
     'heart'            => 'Herz',
