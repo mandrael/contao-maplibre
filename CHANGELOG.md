@@ -4,7 +4,7 @@ Alle nennenswerten Änderungen an diesem Projekt werden hier dokumentiert.
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.2.0] – noch nicht veröffentlicht
+## [0.2.0] – 2026-10-03
 
 ### Hinzugefügt
 - **Kategorien-Legende:** Option im Karten-Element; Besucher blenden Kategorien (z. B. Übernachtung,
@@ -73,7 +73,7 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   wird nicht mehr fälschlich durch den Fallback ersetzt, und mehrere Marker ohne `fitBounds`/festen
   Mittelpunkt zentrieren jetzt auf die Mitte der Marker statt auf `[0, 0]`.
 
-## [0.1.0] – noch nicht veröffentlicht
+## [0.1.0] – nicht einzeln veröffentlicht (in 0.2.0 enthalten)
 
 ### Hinzugefügt
 - Backend-Modul **MapLibre Standorte** (`tl_maplibre_location`): Titel, Adresse, Kategorie,
