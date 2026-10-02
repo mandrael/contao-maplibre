@@ -64,7 +64,7 @@
     return idx === -1 || link.charAt(idx) !== ':';
   }
 
-  function buildPopup(m) {
+  function buildPopup(m, cfg) {
     var wrap = document.createElement('div');
     wrap.className = 'maplibre-popup';
 
@@ -95,14 +95,28 @@
       // Contao setzt <base href> auf die Startseite: "#anker" würde dorthin springen statt auf diese Seite.
       link.href = m.link.charAt(0) === '#' ? window.location.pathname + window.location.search + m.link : m.link;
       link.textContent = (window.MAPLIBRE_I18N && window.MAPLIBRE_I18N.more) || 'Mehr erfahren';
+      // Fremde Seiten im neuen Tab, damit die Karte offen bleibt; Anker und eigene Seiten im selben Tab.
+      if (/^https?:/i.test(m.link)) { link.target = '_blank'; link.rel = 'noopener'; }
       wrap.appendChild(link);
+    }
+
+    if (cfg && cfg.gmapsLink) {
+      // Mit Name und Adresse öffnet Google die Ortskarte; ohne Adresse genügen die Koordinaten.
+      var query = m.address ? (m.title ? m.title + ', ' : '') + m.address : m.lat + ',' + m.lng;
+      var gmaps = document.createElement('a');
+      gmaps.className = 'maplibre-popup__gmaps';
+      gmaps.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+      gmaps.target = '_blank';
+      gmaps.rel = 'noopener';
+      gmaps.textContent = cfg.gmapsLabel || 'In Google Maps öffnen';
+      wrap.appendChild(gmaps);
     }
 
     return wrap;
   }
 
-  function hasPopup(m) {
-    return !!(m.title || m.address || m.description || m.link);
+  function hasPopup(m, cfg) {
+    return !!(m.title || m.address || m.description || m.link || (cfg && cfg.gmapsLink));
   }
 
   function boundsOf(markers) {
@@ -164,8 +178,8 @@
 
       marker.setLngLat([m.lng, m.lat]);
 
-      if (hasPopup(m)) {
-        marker.setPopup(new maplibregl.Popup({ offset: popupOffset }).setDOMContent(buildPopup(m)));
+      if (hasPopup(m, cfg)) {
+        marker.setPopup(new maplibregl.Popup({ offset: popupOffset }).setDOMContent(buildPopup(m, cfg)));
       }
 
       marker.addTo(map);
@@ -254,8 +268,8 @@
 
       marker.setLngLat(coords);
 
-      if (hasPopup(m)) {
-        marker.setPopup(new maplibregl.Popup({ offset: m.icon ? [0, -42] : 24 }).setDOMContent(buildPopup(m)));
+      if (hasPopup(m, cfg)) {
+        marker.setPopup(new maplibregl.Popup({ offset: m.icon ? [0, -42] : 24 }).setDOMContent(buildPopup(m, cfg)));
       }
 
       return marker;

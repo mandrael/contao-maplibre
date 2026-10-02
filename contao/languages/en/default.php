@@ -5,6 +5,7 @@ $GLOBALS['TL_LANG']['CTE']['maplibre_map'] = ['MapLibre map', 'Insert a MapLibre
 
 // Frontend: title of the category legend
 $GLOBALS['TL_LANG']['MSC']['maplibreLegend'] = 'Categories';
+$GLOBALS['TL_LANG']['MSC']['maplibreGmaps'] = 'Open in Google Maps';
 
 // Icon picker
 $GLOBALS['TL_LANG']['MSC']['maplibreIconNone'] = 'Default pin';

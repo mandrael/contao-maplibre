@@ -5,6 +5,7 @@ $GLOBALS['TL_LANG']['CTE']['maplibre_map'] = ['MapLibre Karte', 'Eine MapLibre-K
 
 // Frontend: Titel der Kategorien-Legende
 $GLOBALS['TL_LANG']['MSC']['maplibreLegend'] = 'Kategorien';
+$GLOBALS['TL_LANG']['MSC']['maplibreGmaps'] = 'In Google Maps öffnen';
 
 // Icon-Picker
 $GLOBALS['TL_LANG']['MSC']['maplibreIconNone'] = 'Standard-Pin';

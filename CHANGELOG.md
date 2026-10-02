@@ -10,6 +10,10 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **Kategorien-Legende:** Option im Karten-Element; Besucher blenden Kategorien (z. B. Übernachtung,
   Essen) per Checkbox ein und aus – wie bei Google My Maps. Funktioniert im Pin- und Cluster-Modus,
   vor der Aktivierung der Karte und auf schmalen Karten eingeklappt.
+- **Farbe je Kategorie:** im Karten-Element pro Kategorie eine Pin-Farbe (Key-Value-Feld), auch in der Legende.
+- **Google-Maps-Knopf im Popup** (optional): „In Google Maps öffnen" im neuen Tab, z. B. für die Route;
+  externe Website-Links öffnen ebenfalls im neuen Tab.
+- **Größeres Icon im Pin:** 17 px statt 14 px, mittig im Pin-Kopf.
 - **Beschreibung je Standort:** kurzer Text im Popup (Zeilenumbrüche bleiben erhalten), z. B. Ruhetage.
 - **Icons Bus und Bank** (Maki, CC0); der KML-Import ordnet Googles Marker-Symbole passenden Icons zu.
 - **Marker-Symbole:** kuratiertes Maki-Icon-Set (CC0, `public/icons/`) mit visuellem Backend-Picker;

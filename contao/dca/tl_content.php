@@ -10,7 +10,7 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = [InlineMarke
 $GLOBALS['TL_DCA']['tl_content']['palettes']['maplibre_map'] =
     '{type_legend},type,headline;'
     .'{maplibre_source_legend},maplibre_locations,maplibre_categories,maplibre_inline;'
-    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_default_icon,maplibre_cluster,maplibre_interactive,maplibre_legend;'
+    .'{maplibre_map_legend},maplibre_style,maplibre_height,maplibre_marker_color,maplibre_category_colors,maplibre_default_icon,maplibre_cluster,maplibre_interactive,maplibre_legend,maplibre_gmaps_link;'
     .'{maplibre_focus_legend},maplibre_fit_bounds,maplibre_zoom,maplibre_center_lat,maplibre_center_lng;'
     .'{template_legend:hide},customTpl;'
     .'{protected_legend:hide},protected;'
@@ -69,6 +69,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_marker_color'] = [
     'sql'       => "varchar(6) NOT NULL default '4a6b3a'",
 ];
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_category_colors'] = [
+    'exclude'   => true,
+    'inputType' => 'keyValueWizard',
+    'eval'      => ['tl_class' => 'clr'],
+    'sql'       => 'blob NULL',
+];
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_default_icon'] = [
     'exclude'   => true,
     'inputType' => 'maplibreIconPicker',
@@ -123,4 +130,11 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_center_lng'] = [
     'inputType' => 'text',
     'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
     'sql'       => "varchar(32) NOT NULL default ''",
+];
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_gmaps_link'] = [
+    'exclude'   => true,
+    'inputType' => 'checkbox',
+    'eval'      => ['tl_class' => 'w50 m12'],
+    'sql'       => "char(1) NOT NULL default ''",
 ];

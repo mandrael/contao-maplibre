@@ -65,6 +65,8 @@ final class MaplibreRenderer
             'markerColor' => (string) ($options['markerColor'] ?? self::DEFAULT_MARKER_COLOR),
             'legend' => (bool) ($options['legend'] ?? false),
             'legendTitle' => (string) ($options['legendTitle'] ?? 'Kategorien'),
+            'gmapsLink' => (bool) ($options['gmapsLink'] ?? false),
+            'gmapsLabel' => (string) ($options['gmapsLabel'] ?? 'In Google Maps öffnen'),
             'markers' => $markerData,
         ];
     }

@@ -39,11 +39,12 @@
 }
 
 .maplibre-pin__icon {
+  /* Kopf des Pins = Kreis um (15 | 14,5) mit Radius 14 im 30×40-Pin; 17 px Glyph mittig, Ecken bleiben im Kreis. */
   position: absolute;
-  left: 8px;
-  top: 7px;
-  width: 14px;
-  height: 14px;
+  left: 6.5px;
+  top: 6px;
+  width: 17px;
+  height: 17px;
   background-color: #ffffff;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -278,3 +279,28 @@
 .maplibre-map .maplibre-legend__count {
   color: #666;
 }
+
+.maplibre-map .maplibre-popup__gmaps,
+.maplibre-map .maplibre-popup__gmaps:hover {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  background: #f3f3f3;
+  box-shadow: none;
+  color: #444;
+  font-size: 12px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.maplibre-map .maplibre-popup__gmaps:hover {
+  background: #e8e8e8;
+}
+
+/* Link und Google-Knopf untereinander, nicht nebeneinander gequetscht. */
+.maplibre-map .maplibre-popup__link {
+  display: block;
+}
+

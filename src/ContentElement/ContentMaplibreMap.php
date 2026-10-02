@@ -57,6 +57,7 @@ class ContentMaplibreMap extends ContentElement
         $defaultIcon = $this->resolveBundledIcon((string) $this->maplibre_default_icon, $basePath);
 
         $markers = [];
+        $categoryColors = $this->categoryColors();
 
         // 1. Zentrale Standorte: Auswahl + Kategorien, nur veröffentlichte mit Koordinaten.
         $ids = StringUtil::deserialize($this->maplibre_locations, true);
@@ -76,7 +77,7 @@ class ContentMaplibreMap extends ContentElement
                 (string) $row['title'],
                 $this->composeAddress($row),
                 (string) ($row['link'] ?? ''),
-                null,
+                $categoryColors[trim((string) ($row['category'] ?? ''))] ?? null,
                 '' !== $icon ? $icon : null,
                 trim((string) ($row['description'] ?? '')),
                 trim((string) ($row['category'] ?? '')),
@@ -112,6 +113,8 @@ class ContentMaplibreMap extends ContentElement
             'markerColor' => $this->normalizeColor((string) $this->maplibre_marker_color),
             'legend' => (bool) $this->maplibre_legend,
             'legendTitle' => (string) ($GLOBALS['TL_LANG']['MSC']['maplibreLegend'] ?? 'Kategorien'),
+            'gmapsLink' => (bool) $this->maplibre_gmaps_link,
+            'gmapsLabel' => (string) ($GLOBALS['TL_LANG']['MSC']['maplibreGmaps'] ?? 'In Google Maps öffnen'),
         ];
 
         $renderer->registerAssets();
@@ -136,6 +139,28 @@ class ContentMaplibreMap extends ContentElement
         $country = trim((string) ($row['country'] ?? ''));
 
         return implode(', ', array_filter([$street, $cityLine, $country]));
+    }
+
+    /**
+     * Farbe je Kategorie aus dem Key-Value-Feld des Elements (Kategorie => Hex). Ungültige Farben fallen weg,
+     * die Marker nehmen dann die Element-Markerfarbe.
+     *
+     * @return array<string, string>
+     */
+    private function categoryColors(): array
+    {
+        $colors = [];
+
+        foreach (StringUtil::deserialize($this->maplibre_category_colors, true) as $pair) {
+            $category = trim((string) ($pair['key'] ?? ''));
+            $hex = ltrim(trim((string) ($pair['value'] ?? '')), '#');
+
+            if ('' !== $category && preg_match('/^[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?$/', $hex)) {
+                $colors[$category] = '#'.$hex;
+            }
+        }
+
+        return $colors;
     }
 
     /**
