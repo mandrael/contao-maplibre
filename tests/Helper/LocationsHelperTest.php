@@ -19,7 +19,7 @@ class LocationsHelperTest extends TestCase
 
     public function testCategoryOptionsUsePlainValuesAndEscapedLabels(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection->method('fetchFirstColumn')->willReturn(['Essen &amp; Café', 'Essen & Café', 'X &#60;img src=x onerror=alert(1)>']);
 
         $options = (new LocationsHelper($connection))->getCategories();
@@ -33,7 +33,7 @@ class LocationsHelperTest extends TestCase
 
     public function testLocationOptionsAreEscaped(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection->method('fetchAllAssociative')->willReturn([['id' => 3, 'title' => '<b>Hof</b> & Garten', 'city' => 'Wien']]);
 
         $this->assertSame([3 => '&lt;b&gt;Hof&lt;/b&gt; &amp; Garten (Wien)'], (new LocationsHelper($connection))->getLocations());
