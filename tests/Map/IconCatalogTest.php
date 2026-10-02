@@ -11,7 +11,7 @@ class IconCatalogTest extends TestCase
 {
     public function testHasOnlyAcceptsKnownKeys(): void
     {
-        $this->assertTrue(IconCatalog::has('school'));
+        $this->assertTrue(IconCatalog::has('college'));
         $this->assertTrue(IconCatalog::has('marker'));
         $this->assertFalse(IconCatalog::has(''));
         $this->assertFalse(IconCatalog::has('does-not-exist'));
@@ -19,7 +19,7 @@ class IconCatalogTest extends TestCase
 
     public function testRelativeUrlPointsToBundleAsset(): void
     {
-        $this->assertSame('bundles/mandraelcontaomaplibre/icons/school.svg', IconCatalog::relativeUrl('school'));
+        $this->assertSame('bundles/mandraelcontaomaplibre/icons/college.svg', IconCatalog::relativeUrl('college'));
     }
 
     public function testKeysAreUniqueAndNonEmpty(): void

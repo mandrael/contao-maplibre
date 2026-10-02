@@ -19,8 +19,10 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ### Behoben
-- **Theme-Buttonstile:** Zoom-Knöpfe und Popup-Schließer werden gegen globale `button`-Stile des
-  Themes zurückgesetzt (sonst aufgeblähte Knöpfe und verdeckter Popup-Titel).
+- **Theme-unabhängige Darstellung:** Zoom-Knöpfe, Popup (Schließer, Titel, Adresse, Link) und Attribution
+  haben feste Stile und übernehmen keine globalen `button`-/`a`-/Schriftstile des Themes mehr.
+- **Icon „Schule" entfernt** (Apfel und Bleistift passen nicht zu Ausbildungsorten); für Bildung dient
+  der Doktorhut (`college`, „Bildung / Ausbildung").
 - **Kartenhöhe bei aktiver CSP:** wird jetzt per Skript (CSSOM) statt als Inline-`style`-Attribut
   gesetzt, damit die Karte sichtbar bleibt, wenn `style-src` kein `'unsafe-inline'` erlaubt.
 - **Backend-Dark-Mode:** Status-Punkte und Ort-Suffix der Standort-Liste sowie der

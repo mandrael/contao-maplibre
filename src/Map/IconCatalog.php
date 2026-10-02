@@ -15,7 +15,6 @@ final class IconCatalog
 
     public const ICONS = [
         'marker',
-        'school',
         'college',
         'library',
         'building',
