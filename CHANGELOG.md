@@ -28,6 +28,10 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ### Behoben
+- **Sonderzeichen aus dem Backend:** Im Backend eingegebene Kategorie-Farben wirkten nicht, weil Contao das „#"
+  kodiert speichert; „&" in Titel, Kategorie und Adresse erschien als „&amp;" und teilte Kategorien in der
+  Legende. Felder speichern jetzt Klartext, Altbestand wird bei der Ausgabe dekodiert.
+- **Popup per Tastatur schließen:** Escape schließt die offene Blase.
 - **Popup am Kartenrand:** Die Blase öffnet immer über dem Pin (wie bei Google Maps); passt sie nicht in die
   Karte, verschiebt sich die Karte. Vorher wechselte die Blase am Rand die Seite, ragte aus der Karte oder
   verdeckte den Pin.

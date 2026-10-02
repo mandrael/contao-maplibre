@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mandrael\ContaoMaplibreBundle\Helper;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
@@ -52,7 +51,18 @@ final class LocationsHelper
             "SELECT DISTINCT category FROM tl_maplibre_location WHERE category != '' ORDER BY category"
         );
 
-        return array_combine($rows, $rows) ?: [];
+        $categories = array_values(array_unique(array_map(self::plain(...), $rows)));
+
+        return array_combine($categories, $categories) ?: [];
+    }
+
+    /**
+     * Contao speichert Textfelder ohne decodeEntities HTML-kodiert (z. B. "&amp;", "&#35;"). Für Vergleiche
+     * und die Ausgabe (JSON, textContent) wird der Klartext gebraucht – auch für Altbestand.
+     */
+    public static function plain(string $value): string
+    {
+        return trim(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
     }
 
     /**
@@ -72,33 +82,22 @@ final class LocationsHelper
             return [];
         }
 
-        $conditions = [];
-        $params = [];
-        $types = [];
-
-        if ($ids) {
-            $conditions[] = 'id IN (:ids)';
-            $params['ids'] = $ids;
-            $types['ids'] = ArrayParameterType::INTEGER;
-        }
-
-        if ($categories) {
-            $conditions[] = 'category IN (:cats)';
-            $params['cats'] = $categories;
-            $types['cats'] = ArrayParameterType::STRING;
-        }
-
-        $params['now'] = time();
-        $types['now'] = ParameterType::INTEGER;
+        // Kategorien im Klartext vergleichen: Altbestand kann HTML-kodiert gespeichert sein ("Essen &amp; Café").
+        $categories = array_map(self::plain(...), $categories);
 
         $sql = 'SELECT * FROM tl_maplibre_location'
-            .' WHERE ('.implode(' OR ', $conditions).')'
-            ." AND published = '1'"
+            ." WHERE published = '1'"
             ." AND (start = '' OR start <= :now)"
             ." AND (stop = '' OR stop > :now)"
             ." AND latitude != '' AND longitude != ''"
             .' ORDER BY sorting, title';
 
-        return $this->connection->fetchAllAssociative($sql, $params, $types);
+        $rows = $this->connection->fetchAllAssociative($sql, ['now' => time()], ['now' => ParameterType::INTEGER]);
+
+        return array_values(array_filter(
+            $rows,
+            static fn (array $row): bool => \in_array((int) $row['id'], $ids, true)
+                || \in_array(self::plain((string) $row['category']), $categories, true),
+        ));
     }
 }

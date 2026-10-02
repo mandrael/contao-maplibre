@@ -175,6 +175,13 @@
       if (dx || dy) {
         map.panBy([dx, dy]);
       }
+
+      // Escape schließt die Blase (MapLibre setzt den Fokus beim Öffnen hinein).
+      popup.getElement().addEventListener('keydown', function (e) {
+        if ('Escape' === e.key) {
+          popup.remove();
+        }
+      });
     });
 
     return popup;

@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'decodeEntities' => true],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'category' => [
@@ -91,7 +91,7 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
             'filter'    => true,
             'sorting'   => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
+            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'decodeEntities' => true],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'description' => [
@@ -110,20 +110,20 @@ $GLOBALS['TL_DCA']['tl_maplibre_location'] = [
         'postal' => [
             'exclude'   => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
+            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50', 'decodeEntities' => true],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
         'city' => [
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
+            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'decodeEntities' => true],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'country' => [
             'exclude'   => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'decodeEntities' => true],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
         'maplibre_regeocode' => [

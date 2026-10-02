@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_marker_color'] = [
 $GLOBALS['TL_DCA']['tl_content']['fields']['maplibre_category_colors'] = [
     'exclude'   => true,
     'inputType' => 'keyValueWizard',
-    'eval'      => ['tl_class' => 'clr'],
+    'eval'      => ['tl_class' => 'clr', 'decodeEntities' => true],
     'sql'       => 'blob NULL',
 ];
 

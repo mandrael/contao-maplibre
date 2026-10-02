@@ -70,17 +70,18 @@ class ContentMaplibreMap extends ContentElement
             }
 
             $icon = $this->resolveLocationIcon($row, $basePath) ?: $defaultIcon;
+            $category = LocationsHelper::plain((string) ($row['category'] ?? ''));
 
             $markers[] = new Marker(
                 (float) $row['latitude'],
                 (float) $row['longitude'],
-                (string) $row['title'],
+                LocationsHelper::plain((string) $row['title']),
                 $this->composeAddress($row),
                 (string) ($row['link'] ?? ''),
-                $categoryColors[trim((string) ($row['category'] ?? ''))] ?? null,
+                $categoryColors[$category] ?? null,
                 '' !== $icon ? $icon : null,
                 trim((string) ($row['description'] ?? '')),
-                trim((string) ($row['category'] ?? '')),
+                $category,
             );
         }
 
@@ -134,9 +135,9 @@ class ContentMaplibreMap extends ContentElement
      */
     private function composeAddress(array $row): string
     {
-        $street = trim((string) ($row['street'] ?? ''));
-        $cityLine = trim(trim((string) ($row['postal'] ?? '')).' '.trim((string) ($row['city'] ?? '')));
-        $country = trim((string) ($row['country'] ?? ''));
+        $street = LocationsHelper::plain((string) ($row['street'] ?? ''));
+        $cityLine = trim(LocationsHelper::plain((string) ($row['postal'] ?? '')).' '.LocationsHelper::plain((string) ($row['city'] ?? '')));
+        $country = LocationsHelper::plain((string) ($row['country'] ?? ''));
 
         return implode(', ', array_filter([$street, $cityLine, $country]));
     }
@@ -152,8 +153,9 @@ class ContentMaplibreMap extends ContentElement
         $colors = [];
 
         foreach (StringUtil::deserialize($this->maplibre_category_colors, true) as $pair) {
-            $category = trim((string) ($pair['key'] ?? ''));
-            $hex = ltrim(trim((string) ($pair['value'] ?? '')), '#');
+            // Das Key-Value-Feld speichert "#" ohne decodeEntities als "&#35;" – deshalb erst dekodieren.
+            $category = LocationsHelper::plain((string) ($pair['key'] ?? ''));
+            $hex = ltrim(LocationsHelper::plain((string) ($pair['value'] ?? '')), '#');
 
             if ('' !== $category && preg_match('/^[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?$/', $hex)) {
                 $colors[$category] = '#'.$hex;
