@@ -28,8 +28,9 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   die Seite durch die Karte; ein Klick aktiviert Mausrad-Zoom/Verschieben.
 
 ### Behoben
-- **Popup am Kartenrand:** Die Blase zeigt jetzt bei jeder Ausrichtung auf den Pin; vorher rutschte sie
-  am Rand (Anker oben/seitlich) über den Pin und die Spitze zeigte ins Leere.
+- **Popup am Kartenrand:** Die Blase öffnet immer über dem Pin (wie bei Google Maps); passt sie nicht in die
+  Karte, verschiebt sich die Karte. Vorher wechselte die Blase am Rand die Seite, ragte aus der Karte oder
+  verdeckte den Pin.
 - **Ankerlinks im Popup:** `#anker` springt auf die aktuelle Seite, nicht wegen Contaos `<base href>`
   auf die Startseite.
 - **Theme-unabhängige Darstellung:** Zoom-Knöpfe, Popup (Schließer, Titel, Adresse, Link) und Attribution

@@ -160,12 +160,25 @@
     return wrap;
   }
 
-  // Popup-Abstand je Anker: MapLibre wählt am Kartenrand einen anderen Anker, ein einzelner Vektor
-  // würde die Blase dann über den Pin schieben. Punkt = Pin-Spitze, Kopf reicht bis y≈-42.
-  var POPUP_OFFSET = {
-    bottom: [0, -42], top: [0, 2], left: [16, -26], right: [-16, -26],
-    'top-left': [12, -18], 'top-right': [-12, -18], 'bottom-left': [12, -34], 'bottom-right': [-12, -34]
-  };
+  // Popup immer über dem Pin (wie Google Maps); passt es nicht in die Karte, wird die Karte verschoben.
+  // Punkt = Pin-Spitze, Pin-Kopf reicht bis y≈-42.
+  function buildMapPopup(map, m, cfg) {
+    var popup = new maplibregl.Popup({ anchor: 'bottom', offset: [0, -42] }).setDOMContent(buildPopup(m, cfg));
+
+    popup.on('open', function () {
+      var pad = 10;
+      var mr = map.getContainer().getBoundingClientRect();
+      var pr = popup.getElement().getBoundingClientRect();
+      var dx = pr.left < mr.left + pad ? pr.left - mr.left - pad : (pr.right > mr.right - pad ? pr.right - mr.right + pad : 0);
+      var dy = pr.top < mr.top + pad ? pr.top - mr.top - pad : 0;
+
+      if (dx || dy) {
+        map.panBy([dx, dy]);
+      }
+    });
+
+    return popup;
+  }
 
   // Gibt eine Filterfunktion zurück: hidden = { Kategorie: true }, Marker ohne Kategorie bleiben sichtbar.
   function addPins(map, cfg) {
@@ -183,7 +196,7 @@
       marker.setLngLat([m.lng, m.lat]);
 
       if (hasPopup(m, cfg)) {
-        marker.setPopup(new maplibregl.Popup({ offset: POPUP_OFFSET }).setDOMContent(buildPopup(m, cfg)));
+        marker.setPopup(buildMapPopup(map, m, cfg));
       }
 
       marker.addTo(map);
@@ -273,7 +286,7 @@
       marker.setLngLat(coords);
 
       if (hasPopup(m, cfg)) {
-        marker.setPopup(new maplibregl.Popup({ offset: POPUP_OFFSET }).setDOMContent(buildPopup(m, cfg)));
+        marker.setPopup(buildMapPopup(map, m, cfg));
       }
 
       return marker;
