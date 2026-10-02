@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mandrael\ContaoMaplibreBundle\Helper;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
@@ -13,6 +14,11 @@ use Doctrine\DBAL\ParameterType;
  */
 final class LocationsHelper
 {
+    private const PUBLISHED = "published = '1'"
+        ." AND (start = '' OR start <= :now)"
+        ." AND (stop = '' OR stop > :now)"
+        ." AND latitude != '' AND longitude != ''";
+
     public function __construct(private readonly Connection $connection)
     {
     }
@@ -29,14 +35,15 @@ final class LocationsHelper
         );
 
         foreach ($rows as $row) {
-            $label = (string) $row['title'];
-            $city = trim((string) ($row['city'] ?? ''));
+            $label = self::plain((string) $row['title']);
+            $city = self::plain((string) ($row['city'] ?? ''));
 
             if ('' !== $city) {
                 $label .= ' ('.$city.')';
             }
 
-            $options[(int) $row['id']] = $label;
+            // Contao gibt Options-Labels im Select-Widget ungefiltert aus – deshalb hier maskieren.
+            $options[(int) $row['id']] = self::escape($label);
         }
 
         return $options;
@@ -51,9 +58,15 @@ final class LocationsHelper
             "SELECT DISTINCT category FROM tl_maplibre_location WHERE category != '' ORDER BY category"
         );
 
-        $categories = array_values(array_unique(array_map(self::plain(...), $rows)));
+        $options = [];
 
-        return array_combine($categories, $categories) ?: [];
+        // Wert im Klartext (passt zu Alt- und Neubestand), Label maskiert (Contao gibt es ungefiltert aus).
+        foreach ($rows as $row) {
+            $category = self::plain((string) $row);
+            $options[$category] = self::escape($category);
+        }
+
+        return $options;
     }
 
     /**
@@ -63,6 +76,11 @@ final class LocationsHelper
     public static function plain(string $value): string
     {
         return trim(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
+    private static function escape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
@@ -82,22 +100,33 @@ final class LocationsHelper
             return [];
         }
 
+        $params = ['now' => time()];
+        $types = ['now' => ParameterType::INTEGER];
+
         // Kategorien im Klartext vergleichen: Altbestand kann HTML-kodiert gespeichert sein ("Essen &amp; Café").
-        $categories = array_map(self::plain(...), $categories);
+        // Daher erst nur id/category lesen und in PHP zuordnen, dann die Treffer vollständig per ID laden.
+        if ($categories) {
+            $categories = array_map(self::plain(...), $categories);
+            $rows = $this->connection->fetchAllAssociative('SELECT id, category FROM tl_maplibre_location WHERE '.self::PUBLISHED, $params, $types);
 
-        $sql = 'SELECT * FROM tl_maplibre_location'
-            ." WHERE published = '1'"
-            ." AND (start = '' OR start <= :now)"
-            ." AND (stop = '' OR stop > :now)"
-            ." AND latitude != '' AND longitude != ''"
-            .' ORDER BY sorting, title';
+            foreach ($rows as $row) {
+                if (\in_array(self::plain((string) $row['category']), $categories, true)) {
+                    $ids[] = (int) $row['id'];
+                }
+            }
+        }
 
-        $rows = $this->connection->fetchAllAssociative($sql, ['now' => time()], ['now' => ParameterType::INTEGER]);
+        if (!$ids) {
+            return [];
+        }
 
-        return array_values(array_filter(
-            $rows,
-            static fn (array $row): bool => \in_array((int) $row['id'], $ids, true)
-                || \in_array(self::plain((string) $row['category']), $categories, true),
-        ));
+        $params['ids'] = array_values(array_unique($ids));
+        $types['ids'] = ArrayParameterType::INTEGER;
+
+        return $this->connection->fetchAllAssociative(
+            'SELECT * FROM tl_maplibre_location WHERE id IN (:ids) AND '.self::PUBLISHED.' ORDER BY sorting, title',
+            $params,
+            $types,
+        );
     }
 }
