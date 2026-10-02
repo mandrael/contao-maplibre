@@ -85,3 +85,47 @@
   display: inline-block;
   margin-top: 6px;
 }
+
+/* Theme-Schutz: viele Contao-Themes stylen jedes <button> (Verlauf, Schatten, Abstand, Innenabstand).
+   Das würde Zoom-Knöpfe und Popup-Schließer der Karte aufblähen, daher hier zurücksetzen. */
+.maplibre-map .maplibregl-ctrl button,
+.maplibre-map .maplibregl-popup-close-button {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  background-color: transparent;
+  background-image: none;
+}
+
+.maplibre-map .maplibregl-ctrl-group button {
+  width: 29px;
+  height: 29px;
+}
+
+.maplibre-map .maplibregl-ctrl-group button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.maplibre-map .maplibregl-popup-close-button {
+  width: 24px;
+  height: 24px;
+  color: #333;
+  font-size: 18px;
+  line-height: 24px;
+  border-radius: 0 3px 0 0;
+}
+
+.maplibre-map .maplibregl-popup-close-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.maplibre-map .maplibregl-popup-content {
+  padding: 12px 28px 12px 12px;
+}
