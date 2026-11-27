@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mandrael\ContaoMaplibreBundle\Map;
 
+use Contao\System;
+
 /**
  * Ein einzelner Karten-Marker. Bewusst transport-agnostisch (Werte-Objekt), damit auch
  * fremde Bundles (z. B. ein kuenftiger Anwender-Katalog) Marker an den Renderer uebergeben koennen.
@@ -92,6 +94,9 @@ final class Marker
         if ('' === $link) {
             return '';
         }
+        
+        // Insert-Tags ersetzen
+        $link = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($link);
 
         // Browser lesen "\" wie "/" und streichen Steuerzeichen: "\\evil.example" oder "\x01//evil"
         // würden sonst zum Link auf eine fremde Domain.
