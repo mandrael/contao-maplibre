@@ -94,9 +94,14 @@ final class Marker
         if ('' === $link) {
             return '';
         }
-        
-        // Insert-Tags ersetzen
-        $link = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($link);
+
+        // Insert-Tags ersetzen, erst danach prüfen. Nur bei "{{" und vorhandenem Container/Parser
+        // (Unit-Tests und CLI haben keinen Contao-Container).
+        $container = str_contains($link, '{{') ? System::getContainer() : null;
+
+        if ($container?->has('contao.insert_tag.parser')) {
+            $link = trim($container->get('contao.insert_tag.parser')->replaceInline($link));
+        }
 
         // Browser lesen "\" wie "/" und streichen Steuerzeichen: "\\evil.example" oder "\x01//evil"
         // würden sonst zum Link auf eine fremde Domain.

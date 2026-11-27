@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Mandrael\ContaoMaplibreBundle\Tests\Map;
 
+use Contao\System;
 use Mandrael\ContaoMaplibreBundle\Map\Marker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Container;
 
 class MarkerTest extends TestCase
 {
@@ -113,5 +115,63 @@ class MarkerTest extends TestCase
     public function testLinkIsSanitized(string $input, string $expected): void
     {
         $this->assertSame($expected, (new Marker(47.81, 13.04, '', '', $input))->link);
+    }
+
+    protected function tearDown(): void
+    {
+        System::setContainer(new Container()); // kein Parser mehr registriert
+    }
+
+    private function withInsertTagParser(string $replacement): void
+    {
+        $container = new Container();
+        $container->set('contao.insert_tag.parser', new class($replacement) {
+            public function __construct(private readonly string $replacement)
+            {
+            }
+
+            public function replaceInline(string $text): string
+            {
+                return $this->replacement;
+            }
+        });
+        System::setContainer($container);
+    }
+
+    public function testInsertTagIsReplacedBeforeCheck(): void
+    {
+        $this->withInsertTagParser('/kontakt.html');
+
+        $this->assertSame('/kontakt.html', (new Marker(47.81, 13.04, '', '', '{{link_url::12}}'))->link);
+    }
+
+    public function testLinkWithoutInsertTagIsNotPassedToParser(): void
+    {
+        $this->withInsertTagParser('/vom-parser');
+
+        $this->assertSame('https://x.at', (new Marker(47.81, 13.04, '', '', 'https://x.at'))->link);
+    }
+
+    public function testInsertTagWithoutParserIsDiscarded(): void
+    {
+        $this->assertSame('', (new Marker(47.81, 13.04, '', '', '{{link_url::12}}'))->link);
+    }
+
+    #[DataProvider('dangerousInsertTagResultProvider')]
+    public function testInsertTagResolvingToDangerousLinkIsDiscarded(string $resolved): void
+    {
+        $this->withInsertTagParser($resolved);
+
+        $this->assertSame('', (new Marker(47.81, 13.04, '', '', '{{link_url::12}}'))->link);
+    }
+
+    /**
+     * @return iterable<string, array{0: string}>
+     */
+    public static function dangerousInsertTagResultProvider(): iterable
+    {
+        yield 'javascript' => ['javascript:alert(1)'];
+        yield 'protokoll-relativ' => ['//fremd.example'];
+        yield 'data' => ['data:text/html,x'];
     }
 }

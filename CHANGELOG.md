@@ -4,6 +4,12 @@ Alle nennenswerten Änderungen an diesem Projekt werden hier dokumentiert.
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [Unveröffentlicht]
+
+### Hinzugefügt
+- **Insert-Tags im Standort-Link** (z. B. `{{link_url::12}}`), Beitrag von daCaPo (PR #1); das aufgelöste Ergebnis durchläuft
+  weiterhin die Link-Prüfung (`javascript:`, `//fremd` usw. werden verworfen).
+
 ## [0.2.0] – 2026-10-03
 
 ### Hinzugefügt
